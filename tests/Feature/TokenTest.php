@@ -16,7 +16,7 @@ class TokenTest extends FeatureCase
 
         $jwt = $token->getToken(1, 'user', getenv('TOKEN_SECRET'), 10, 'test');
 
-        $response = $this->request('POST', '/token/update', ['headers' => ['Authorization' => 'Bearer ' . $jwt]]);
+        $response = $this->request('PATCH', '/token', ['headers' => ['Authorization' => 'Bearer ' . $jwt]]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -27,25 +27,33 @@ class TokenTest extends FeatureCase
         $this->assertEquals('token', $json->type);
     }
 
-    // public function testUpdateTokenNoToken()
-    // {
-    //     $response = $this->request('POST', '/token/update');
-    //
-    //     $this->assertEquals(400, $response->getStatusCode());
-    //
-    //     $json = json_decode($response->getBody());
-    //
-    //     $this->assertTrue(isset($json->error));
-    // }
-    //
-    // public function testUpdateTokenBadToken()
-    // {
-    //     $response = $this->request('POST', '/token/update', ['token' => '123']);
-    //
-    //     $this->assertEquals(401, $response->getStatusCode());
-    //
-    //     $json = json_decode($response->getBody());
-    //
-    //     $this->assertTrue(isset($json->error));
-    // }
+    public function testUpdateTokenNoToken()
+    {
+        $response = $this->request('PATCH', '/token');
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $json = json_decode($response->getBody());
+
+        $this->assertTrue(isset($json->errors));
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+        $this->assertEquals('400', $json->errors->code);
+        $this->assertEquals('Bad Request: Please provide a valid authentication token', $json->errors->message);
+    }
+
+    public function testUpdateTokenBadToken()
+    {
+        $response = $this->request('PATCH', '/token', ['headers' => ['Authorization' => 'Bearer 123']]);
+
+        $this->assertEquals(401, $response->getStatusCode());
+
+        $json = json_decode($response->getBody());
+
+        $this->assertTrue(isset($json->errors));
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+        $this->assertEquals('401', $json->errors->code);
+        $this->assertEquals('Unathorised: Please provide a valid authentication token', $json->errors->message);
+    }
 }

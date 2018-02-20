@@ -4,6 +4,7 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
+use Throwable;
 
 class FeatureCase extends TestCase
 {
@@ -19,7 +20,12 @@ class FeatureCase extends TestCase
 
     protected function request(string $type, string $url, array $data = [])
     {
-        return $this->client->request($type, 'http://localhost' . $url, $data);
+        try {
+            return $this->client->request($type, 'http://localhost' . $url, $data);
+        }
+        catch (Throwable $e) {
+            return $e->getResponse();
+        }
     }
 
     protected function tearDown()

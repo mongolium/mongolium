@@ -24,8 +24,7 @@ trait JsonResponse
             $data['data'] = $jsonResponse->getData();
         }
 
-        $response->withStatus($jsonResponse->getCode());
         $response->withHeader('Content-type', 'application/json');
-        return $response->withJson($data);
+        return $response->withJson($data, $jsonResponse->getCode());
     }
 }
