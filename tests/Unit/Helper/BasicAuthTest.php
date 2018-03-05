@@ -3,7 +3,7 @@
 namespace Tests\Unit\Helper;
 
 use PHPUnit\Framework\TestCase;
-use Helium\Helper\BasicAuth;
+use Mongolium\Helper\BasicAuth;
 
 class BasicAuthTest extends TestCase
 {

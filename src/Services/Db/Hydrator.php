@@ -1,6 +1,6 @@
 <?php
 
-namespace Helium\Services\Db;
+namespace Mongolium\Services\Db;
 
 interface Hydrator
 {

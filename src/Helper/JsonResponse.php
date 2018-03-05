@@ -1,8 +1,8 @@
 <?php
 
-namespace Helium\Helper;
+namespace Mongolium\Helper;
 
-use Helium\Services\JsonResponse as JsonResponseObject;
+use Mongolium\Services\JsonResponse as JsonResponseObject;
 
 trait JsonResponse
 {

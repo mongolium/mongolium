@@ -1,10 +1,10 @@
 <?php
 
-namespace Helium\Middleware;
+namespace Mongolium\Middleware;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Helium\Helper\Auth;
+use Mongolium\Helper\Auth;
 
 class Basic
 {

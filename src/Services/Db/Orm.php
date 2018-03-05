@@ -1,11 +1,11 @@
 <?php
 
-namespace Helium\Services\Db;
+namespace Mongolium\Services\Db;
 
-use Helium\Services\Db\Client;
-use Helium\Services\Db\Hydratpr;
-use Helium\Exceptions\OrmException;
-use Helium\Services\Db\BaseModel;
+use Mongolium\Services\Db\Client;
+use Mongolium\Services\Db\Hydratpr;
+use Mongolium\Exceptions\OrmException;
+use Mongolium\Services\Db\BaseModel;
 
 class Orm
 {

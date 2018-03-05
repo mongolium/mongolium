@@ -1,6 +1,6 @@
 <?php
 
-namespace Helium\Exceptions;
+namespace Mongolium\Exceptions;
 
 use Exception;
 

@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use Tests\FeatureCase;
-use Helium\Services\Db\Orm;
-use Helium\Services\Db\Client;
-use Helium\Model\User;
+use Mongolium\Services\Db\Orm;
+use Mongolium\Services\Db\Client;
+use Mongolium\Model\User;
 
 class OrmTest extends FeatureCase
 {

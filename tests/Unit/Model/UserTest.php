@@ -3,7 +3,7 @@
 namespace Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
-use Helium\Model\User;
+use Mongolium\Model\User;
 
 class UserTest extends TestCase
 {

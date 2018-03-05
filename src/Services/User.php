@@ -1,9 +1,9 @@
 <?php
 
-namespace Helium\Services;
+namespace Mongolium\Services;
 
-use Helium\Services\Db\Orm;
-use Helium\Model\User as UserModel;
+use Mongolium\Services\Db\Orm;
+use Mongolium\Model\User as UserModel;
 
 class User
 {

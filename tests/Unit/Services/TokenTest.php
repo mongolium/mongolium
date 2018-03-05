@@ -3,12 +3,12 @@
 namespace Tests\Services;
 
 use PHPUnit\Framework\TestCase;
-use Helium\Services\Token as TokenService;
+use Mongolium\Services\Token as TokenService;
 use ReallySimpleJWT\TokenBuilder;
 use ReallySimpleJWT\TokenValidator;
 use ReallySimpleJWT\Token;
 use Carbon\Carbon;
-use Helium\Services\Db\Orm;
+use Mongolium\Services\Db\Orm;
 use Mockery as m;
 
 class TokenTest extends TestCase

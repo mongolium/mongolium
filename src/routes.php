@@ -1,8 +1,8 @@
 <?php
 
-use Helium\Middleware\Auth;
-use Helium\Middleware\Password;
-use Helium\Middleware\Basic;
+use Mongolium\Middleware\Auth;
+use Mongolium\Middleware\Password;
+use Mongolium\Middleware\Basic;
 
 $app = new Slim\App($container);
 

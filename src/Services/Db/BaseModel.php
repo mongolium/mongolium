@@ -1,8 +1,8 @@
 <?php
 
-namespace Helium\Services\Db;
+namespace Mongolium\Services\Db;
 
-use Helium\Services\Db\Hydrator;
+use Mongolium\Services\Db\Hydrator;
 
 abstract class BaseModel implements Hydrator
 {

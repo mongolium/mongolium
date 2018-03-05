@@ -1,9 +1,9 @@
 <?php
 
-namespace Helium\Model;
+namespace Mongolium\Model;
 
-use Helium\Services\Db\BaseModel;
-use Helium\Services\Db\Hydrator;
+use Mongolium\Services\Db\BaseModel;
+use Mongolium\Services\Db\Hydrator;
 
 class User extends BaseModel
 {

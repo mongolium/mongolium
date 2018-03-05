@@ -5,11 +5,11 @@ namespace Tests\Feature;
 use Tests\FeatureCase;
 use ReallySimpleJWT\TokenBuilder;
 use ReallySimpleJWT\TokenValidator;
-use Helium\Services\Token;
-use Helium\Services\Db\Orm;
-use Helium\Services\Db\Client;
-use Helium\Model\User;
-use Helium\Helper\BasicAuth;
+use Mongolium\Services\Token;
+use Mongolium\Services\Db\Orm;
+use Mongolium\Services\Db\Client;
+use Mongolium\Model\User;
+use Mongolium\Helper\BasicAuth;
 use Mockery as m;
 
 class TokenTest extends FeatureCase

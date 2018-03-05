@@ -3,8 +3,8 @@
 namespace Tests\Unit\Services\Db;
 
 use PHPUnit\Framework\TestCase;
-use Helium\Services\Db\Orm;
-use Helium\Model\User;
+use Mongolium\Services\Db\Orm;
+use Mongolium\Model\User;
 use Mockery as m;
 
 class OrmTest extends TestCase

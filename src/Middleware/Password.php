@@ -1,11 +1,11 @@
 <?php
 
-namespace Helium\Middleware;
+namespace Mongolium\Middleware;
 
-use Helium\Helper\JsonResponse as JsonResponseHelper;
-use Helium\Services\JsonResponse;
-use Helium\Helper\Id;
-use Helium\Helper\BasicAuth;
+use Mongolium\Helper\JsonResponse as JsonResponseHelper;
+use Mongolium\Services\JsonResponse;
+use Mongolium\Helper\Id;
+use Mongolium\Helper\BasicAuth;
 
 class Password
 {

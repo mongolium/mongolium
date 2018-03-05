@@ -1,6 +1,6 @@
 <?php
 
-namespace Helium\Helper;
+namespace Mongolium\Helper;
 
 trait BasicAuth
 {

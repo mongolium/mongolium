@@ -1,6 +1,6 @@
 <?php
 
-namespace Helium\Services\Db;
+namespace Mongolium\Services\Db;
 
 use MongoDB\Client as MongoClient;
 

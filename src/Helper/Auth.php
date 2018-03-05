@@ -1,8 +1,8 @@
 <?php
 
-namespace Helium\Helper;
+namespace Mongolium\Helper;
 
-use Helium\Exceptions\Auth as AuthException;
+use Mongolium\Exceptions\Auth as AuthException;
 use Slim\Http\Request;
 
 trait Auth

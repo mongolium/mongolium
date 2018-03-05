@@ -1,12 +1,12 @@
 <?php
 
-namespace Helium\Services;
+namespace Mongolium\Services;
 
 use ReallySimpleJWT\TokenBuilder;
 use ReallySimpleJWT\TokenValidator;
 use Carbon\Carbon;
-use Helium\Services\Db\Orm;
-use Helium\Exceptions\TokenException;
+use Mongolium\Services\Db\Orm;
+use Mongolium\Exceptions\TokenException;
 use stdClass;
 
 class Token
@@ -57,8 +57,8 @@ class Token
 
     public function createToken(string $username, string $password, string $secret, int $minutes, string $issuer): string
     {
-        if ($this->orm->count('Helium\Model\User', ['username' => $username, 'password' => $password]) === 1) {
-            $user = $this->orm->find('Helium\Model\User', ['username' => $username, 'password' => $password]);
+        if ($this->orm->count('Mongolium\Model\User', ['username' => $username, 'password' => $password]) === 1) {
+            $user = $this->orm->find('Mongolium\Model\User', ['username' => $username, 'password' => $password]);
 
             $user = $user->extract();
 

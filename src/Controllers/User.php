@@ -1,11 +1,11 @@
 <?php
 
-namespace Helium\Controllers;
+namespace Mongolium\Controllers;
 
-use Helium\Services\User as UserService;
-use Helium\Helper\JsonResponse as JsonResponseHelper;
-use Helium\Helper\Id;
-use Helium\Services\JsonResponse;
+use Mongolium\Services\User as UserService;
+use Mongolium\Helper\JsonResponse as JsonResponseHelper;
+use Mongolium\Helper\Id;
+use Mongolium\Services\JsonResponse;
 use Throwable;
 
 class User

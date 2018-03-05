@@ -1,13 +1,13 @@
 <?php
 
-namespace Helium\Controllers;
+namespace Mongolium\Controllers;
 
-use Helium\Services\Token as TokenService;
-use Helium\Helper\Auth as AuthHelper;
-use Helium\Helper\JsonResponse as JsonResponseHelper;
-use Helium\Services\JsonResponse;
-use Helium\Helper\BasicAuth;
-use Helium\Helper\Environment;
+use Mongolium\Services\Token as TokenService;
+use Mongolium\Helper\Auth as AuthHelper;
+use Mongolium\Helper\JsonResponse as JsonResponseHelper;
+use Mongolium\Services\JsonResponse;
+use Mongolium\Helper\BasicAuth;
+use Mongolium\Helper\Environment;
 
 class Token
 {

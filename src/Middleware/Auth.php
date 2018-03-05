@@ -1,13 +1,13 @@
 <?php
 
-namespace Helium\Middleware;
+namespace Mongolium\Middleware;
 
-use Helium\Helper\Auth as AuthHelper;
+use Mongolium\Helper\Auth as AuthHelper;
 use ReallySimpleJWT\Token;
 use Throwable;
-use Helium\Helper\JsonResponse as JsonResponseHelper;
-use Helium\Services\JsonResponse;
-use Helium\Helper\Id;
+use Mongolium\Helper\JsonResponse as JsonResponseHelper;
+use Mongolium\Services\JsonResponse;
+use Mongolium\Helper\Id;
 
 class Auth
 {

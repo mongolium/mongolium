@@ -1,6 +1,6 @@
 <?php
 
-namespace Helium\Services;
+namespace Mongolium\Services;
 
 class JsonResponse
 {

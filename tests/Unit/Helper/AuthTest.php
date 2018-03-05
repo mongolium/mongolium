@@ -3,7 +3,7 @@
 namespace Tests\Unit\Helper;
 
 use PHPUnit\Framework\TestCase;
-use Helium\Helper\Auth;
+use Mongolium\Helper\Auth;
 use Slim\Http\Request;
 use Mockery as m;
 
