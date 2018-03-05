@@ -6,15 +6,78 @@ use Tests\FeatureCase;
 use ReallySimpleJWT\TokenBuilder;
 use ReallySimpleJWT\TokenValidator;
 use Helium\Services\Token;
-use Carbon\Carbon;
+use Helium\Services\Db\Orm;
+use Helium\Services\Db\Client;
+use Helium\Model\User;
+use Helium\Helper\BasicAuth;
+use Mockery as m;
 
 class TokenTest extends FeatureCase
 {
+    use BasicAuth;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->drop(User::class);
+
+        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+    }
+
+    public function testGetToken()
+    {
+        $response = $this->request('POST', '/token', ['headers' => ['Authorization' => 'Basic ' . $this->encode('rob', 'waller')]]);
+
+        $json = json_decode($response->getBody());
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+    }
+
+    public function testGetTokenNoUsernamePassword()
+    {
+        $response = $this->request('POST', '/token');
+
+        $json = json_decode($response->getBody());
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+        $this->assertTrue(isset($json->errors));
+        $this->assertEquals(
+            'Bad Request: Please supply a username and password with your request',
+            $json->errors->message
+        );
+    }
+
+    public function testGetTokenBadUsernamePasswordString()
+    {
+        $response = $this->request('POST', '/token', ['headers' => ['Authorization' => 'Basic 123']]);
+
+        $json = json_decode($response->getBody());
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+        $this->assertTrue(isset($json->errors));
+        $this->assertEquals(
+            'Bad Request: Please supply a valid username and password with your request',
+            $json->errors->message
+        );
+    }
+
     public function testUpdateToken()
     {
-        $token = new Token(new TokenBuilder, new TokenValidator);
+        $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->getToken(1, 'user', getenv('TOKEN_SECRET'), 10, 'test');
+        $jwt = $token->makeToken(1, 'user', getenv('TOKEN_SECRET'), 10, 'test');
 
         $response = $this->request('PATCH', '/token', ['headers' => ['Authorization' => 'Bearer ' . $jwt]]);
 
@@ -39,7 +102,7 @@ class TokenTest extends FeatureCase
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertEquals('400', $json->errors->code);
-        $this->assertEquals('Bad Request: Please provide a valid authentication token', $json->errors->message);
+        $this->assertEquals('Bad Request: Please provide an authentication token', $json->errors->message);
     }
 
     public function testUpdateTokenBadToken()
@@ -55,5 +118,12 @@ class TokenTest extends FeatureCase
         $this->assertTrue(isset($json->links));
         $this->assertEquals('401', $json->errors->code);
         $this->assertEquals('Unathorised: Please provide a valid authentication token', $json->errors->message);
+    }
+
+    public function tearDown()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->drop(User::class);
     }
 }

@@ -8,30 +8,32 @@ use ReallySimpleJWT\TokenBuilder;
 use ReallySimpleJWT\TokenValidator;
 use ReallySimpleJWT\Token;
 use Carbon\Carbon;
+use Helium\Services\Db\Orm;
+use Mockery as m;
 
 class TokenTest extends TestCase
 {
     public function testTokenService()
     {
-        $token = new TokenService(new TokenBuilder, new TokenValidator);
+        $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
         $this->assertInstanceOf(TokenService::class, $token);
     }
 
     public function testGetToken()
     {
-        $token = new TokenService(new TokenBuilder, new TokenValidator);
+        $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->getToken(2, 'admin', '123456*$abcDEF', 5, 'my business');
+        $jwt = $token->makeToken(2, 'admin', '123456*$abcDEF', 5, 'my business');
 
         $this->assertTrue(Token::validate($jwt, '123456*$abcDEF'));
     }
 
     public function testGetPayload()
     {
-        $token = new TokenService(new TokenBuilder, new TokenValidator);
+        $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->getToken(1, 'editor', '123456*$abcDEF', 5, 'my business');
+        $jwt = $token->makeToken(1, 'editor', '123456*$abcDEF', 5, 'my business');
 
         $payload = $token->getPayload($jwt);
 
@@ -41,9 +43,9 @@ class TokenTest extends TestCase
 
     public function testRenewToken()
     {
-        $token = new TokenService(new TokenBuilder, new TokenValidator);
+        $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->getToken(5, 'user', '123456*$abcDEF', 1, 'my business');
+        $jwt = $token->makeToken(5, 'user', '123456*$abcDEF', 1, 'my business');
 
         $newJwt = $token->renewToken($jwt, '123456*$abcDEF', 21);
 
@@ -55,7 +57,7 @@ class TokenTest extends TestCase
 
     public function testValidateToken()
     {
-        $token = new TokenService(new TokenBuilder, new TokenValidator);
+        $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
         $jwt = Token::getToken(5, '123456*$abcDEF', Carbon::now()->addMinutes(2)->toDateTimeString(), 'my business');
 

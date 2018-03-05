@@ -16,12 +16,12 @@ class Auth
     public function __invoke($request, $response, $next)
     {
         try {
-            if (!$request->hasHeader('AUTHORIZATION')) {
+            if (empty($request->getAttribute('bearer_token'))) {
                 return $this->jsonResponse(
                     $response,
                     new JsonResponse(
                         400,
-                        'Bad Request: Please provide a valid authentication token',
+                        'Bad Request: Please provide an authentication token',
                         $this->generateUniqueId(),
                         'error',
                         [],
@@ -30,9 +30,7 @@ class Auth
                 );
             }
 
-            $bearer = $this->getBearerFromAuthorisationHeader($request->getHeaderLine('AUTHORIZATION'));
-
-            Token::validate($this->getJWTFromBearer($bearer), getenv('TOKEN_SECRET'));
+            Token::validate($request->getAttribute('bearer_token'), getenv('TOKEN_SECRET'));
         }
         catch (Throwable $e) {
             return $this->jsonResponse(
@@ -48,8 +46,6 @@ class Auth
             );
         }
 
-        $response = $next($request, $response);
-
-        return $response;
+        return $next($request, $response);
     }
 }

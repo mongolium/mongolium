@@ -3,34 +3,38 @@
 namespace Helium\Helper;
 
 use Helium\Exceptions\Auth as AuthException;
+use Slim\Http\Request;
 
 trait Auth
 {
-    public function getBearerFromAuthorisationHeader(string $authorisationHeaderString): string
+    public function getAuthorizationAttribute(Request $request, string $attribute): string
     {
-        $parts = explode(",", $authorisationHeaderString);
+        if ($request->hasHeader('Authorization')) {
+            $authHeader = $request->getHeaderLine('Authorization');
 
-        $filter = array_filter($parts, function($row){
-            return preg_match('|^Bearer\s|', trim($row));
-        });
+            $authParts = explode(',', $authHeader);
 
-        $filter = array_values($filter);
+            $authPart = array_filter($authParts, function($row) use ($attribute) {
+                return preg_match('|^' . trim($attribute) . '\s|', $row);
+            });
 
-        if (count($filter) === 1) {
-            return trim($filter[0]);
+            if (count($authPart) === 1) {
+                $tokenParts = explode(' ', $authPart[0]);
+
+                return $tokenParts[1];
+            }
         }
 
-        throw new AuthException('No Bearer found in Authorization Header');
+        return '';
     }
 
-    public function getJWTFromBearer(string $bearerString): string
+    public function getBearerToken(Request $request): string
     {
-        $parts = explode(" ", $bearerString);
+        return $this->getAuthorizationAttribute($request, 'Bearer');
+    }
 
-        if (isset($parts[1])) {
-            return $parts[1];
-        }
-
-        throw new AuthException('Authorization Header Bearer empty, please include a JSON Web Token');
+    public function getBasicAuth(Request $request): string
+    {
+        return $this->getAuthorizationAttribute($request, 'Basic');
     }
 }

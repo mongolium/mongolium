@@ -1,91 +1,122 @@
 <?php
 
-namespace Tests\Helper;
+namespace Tests\Unit\Helper;
 
 use PHPUnit\Framework\TestCase;
 use Helium\Helper\Auth;
+use Slim\Http\Request;
+use Mockery as m;
 
 class AuthTest extends TestCase
 {
     use Auth;
 
-    public function testGetBearerFromAuthorisationHeader()
+    public function testGetAuthorizationAttribute()
     {
-        $headerString = 'Bearer 123';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('Bearer 123');
 
-        $bearer = $this->getBearerFromAuthorisationHeader($headerString);
+        $result = $this->getAuthorizationAttribute($request, 'Bearer');
 
-        $this->assertEquals('Bearer 123', $bearer);
+        $this->assertEquals('123', $result);
     }
 
-    public function testGetBearerFromAuthorisationHeaderMultipleHeader()
+    public function testGetAuthorizationAttributeNoBearer()
     {
-        $headerString = 'Bearer 123, Password Hello';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('');
 
-        $bearer = $this->getBearerFromAuthorisationHeader($headerString);
+        $result = $this->getAuthorizationAttribute($request, 'Bearer');
 
-        $this->assertEquals('Bearer 123', $bearer);
+        $this->assertEquals('', $result);
     }
 
-    public function testGetBearerFromAuthorisationHeaderJumbledHeader()
+    public function testGetAuthorizationAttributeBadData()
     {
-        $headerString = 'Username MeOneTwoThree, Bearer 123, Password Hello';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('123');
 
-        $bearer = $this->getBearerFromAuthorisationHeader($headerString);
+        $result = $this->getAuthorizationAttribute($request, 'Bearer');
 
-        $this->assertEquals('Bearer 123', $bearer);
+        $this->assertEquals('', $result);
     }
 
-    /**
-     * @expectedException Helium\Exceptions\Auth
-     * @expectedExceptionMessage No Bearer found in Authorization Header
-     */
-    public function testGetBearerFromAuthorisationHeaderNoHeader()
+    public function testGetAuthorizationAttributeBadAtrribute()
     {
-        $headerString = '';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('Bearer 123');
 
-        $this->getBearerFromAuthorisationHeader($headerString);
+        $result = $this->getAuthorizationAttribute($request, 'Bearer ');
+
+        $this->assertEquals('123', $result);
     }
 
-    public function testGetJWTFromBearer()
+    public function testGetAuthorizationAttributeWithCommas()
     {
-        $bearerString = 'Bearer 123';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('Bearer 123, Basic 456, Something 789');
 
-        $jwt = $this->getJWTFromBearer($bearerString);
+        $result = $this->getAuthorizationAttribute($request, 'Bearer ');
 
-        $this->assertEquals(123, $jwt);
+        $this->assertEquals('123', $result);
     }
 
-    /**
-     * @expectedException Helium\Exceptions\Auth
-     * @expectedExceptionMessage Authorization Header Bearer empty, please include a JSON Web Token
-     */
-    public function testGetJWTFromBearerNoJwt()
+    public function testGetAuthorizationAttributeNoHeader()
     {
-        $headerString = 'Bearer';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(false);
 
-        $this->getJWTFromBearer($headerString);
+        $result = $this->getAuthorizationAttribute($request, 'Bearer');
+
+        $this->assertEquals('', $result);
     }
 
-    /**
-     * @expectedException Helium\Exceptions\Auth
-     * @expectedExceptionMessage Authorization Header Bearer empty, please include a JSON Web Token
-     */
-    public function testGetJWTFromBearerNoJwtTwo()
+    public function testGetBearerToken()
     {
-        $headerString = '';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('Bearer 123');
 
-        $this->getJWTFromBearer($headerString);
+        $result = $this->getBearerToken($request);
+
+        $this->assertEquals('123', $result);
     }
 
-    /**
-     * @expectedException Helium\Exceptions\Auth
-     * @expectedExceptionMessage Authorization Header Bearer empty, please include a JSON Web Token
-     */
-    public function testGetJWTFromBearerNoJwtThree()
+    public function testGetBearerTokenBadHeader()
     {
-        $headerString = 'Bearer123';
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('Basic 123');
 
-        $this->getJWTFromBearer($headerString);
+        $result = $this->getBearerToken($request);
+
+        $this->assertEquals('', $result);
+    }
+
+    public function testGetBasicAuth()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('Basic abc');
+
+        $result = $this->getBasicAuth($request);
+
+        $this->assertEquals('abc', $result);
+    }
+
+    public function testGetBasicAuthBadHeader()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->once()->andReturn('Bearer abc');
+
+        $result = $this->getBasicAuth($request);
+
+        $this->assertEquals('', $result);
     }
 }

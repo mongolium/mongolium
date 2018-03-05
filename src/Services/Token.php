@@ -5,6 +5,8 @@ namespace Helium\Services;
 use ReallySimpleJWT\TokenBuilder;
 use ReallySimpleJWT\TokenValidator;
 use Carbon\Carbon;
+use Helium\Services\Db\Orm;
+use Helium\Exceptions\TokenException;
 use stdClass;
 
 class Token
@@ -13,14 +15,18 @@ class Token
 
     private $tokenValidator;
 
-    public function __construct(TokenBuilder $tokenBuilder, TokenValidator $tokenValidator)
+    private $orm;
+
+    public function __construct(TokenBuilder $tokenBuilder, TokenValidator $tokenValidator, Orm $orm)
     {
         $this->tokenBuilder = $tokenBuilder;
 
         $this->tokenValidator = $tokenValidator;
+
+        $this->orm = $orm;
     }
 
-    public function getToken(int $userId, string $userType, string $secret, int $minutes, string $issuer): string
+    public function makeToken(string $userId, string $userType, string $secret, int $minutes, string $issuer): string
     {
         return $this->tokenBuilder->addPayload(['key' => 'user_id', 'value' => $userId])
             ->addPayload(['key' => 'user_type', 'value' => $userType])
@@ -39,7 +45,7 @@ class Token
     {
         $oldPayload = $this->getPayload($token);
 
-        return $this->getToken($oldPayload->user_id, $oldPayload->user_type, $secret, $minutes, $oldPayload->iss);
+        return $this->makeToken($oldPayload->user_id, $oldPayload->user_type, $secret, $minutes, $oldPayload->iss);
     }
 
     public function validateToken(string $token, string $secret): bool
@@ -47,5 +53,18 @@ class Token
         return $this->tokenValidator->splitToken($token)
             ->validateExpiration()
             ->validateSignature($secret);
+    }
+
+    public function createToken(string $username, string $password, string $secret, int $minutes, string $issuer): string
+    {
+        if ($this->orm->count('Helium\Model\User', ['username' => $username, 'password' => $password]) === 1) {
+            $user = $this->orm->find('Helium\Model\User', ['username' => $username, 'password' => $password]);
+
+            $user = $user->extract();
+
+            return $this->makeToken($user['id'], $user['type'], $secret, $minutes, $issuer);
+        }
+
+        throw new TokenException('Failed to generate token, please provide valid user credentials');
     }
 }
