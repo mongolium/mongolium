@@ -16,10 +16,15 @@ install:
 before_script:
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction --prefer-source --dev
+    # Set up PHP server
+    - cd public
+    - php -S 127.0.0.1:8000 >/dev/null 2>&1 &
+    - sleep 3
+    - cd ../
 
 script:
     - vendor/bin/phpstan analyse -l 7 -c phpstan.neon tests src public
-    - vendor/bin/phpunit tests/Unit --coverage-clover=coverage.xml
+    - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
