@@ -4,7 +4,7 @@ use Mongolium\Middleware\Auth;
 use Mongolium\Middleware\Password;
 use Mongolium\Middleware\Basic;
 
-$container  = require '../src/container.php';
+$container  = require __DIR__ . '/../src/container.php';
 
 $app = new Slim\App($container);
 

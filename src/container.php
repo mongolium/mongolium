@@ -1,6 +1,6 @@
 <?php
 
-$config = require '../src/config.php';
+$config = require __DIR__ . '/../src/config.php';
 
 $container = new \Slim\Container($config);
 
