@@ -11,7 +11,7 @@ service:
 before_install: echo "extension = <extension>.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 before_script:
-    - pecl install mongodb
+    #- pecl install mongodb
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction --prefer-source --dev
 
