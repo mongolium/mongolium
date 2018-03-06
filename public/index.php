@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 require '../vendor/autoload.php';
 
-require '../src/config.php';
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../');
+$dotenv->load();
 
-require '../src/container.php';
-
-require '../src/routes.php';
+$app = require '../src/routes.php';
 
 $app->run();

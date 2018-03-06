@@ -21,11 +21,6 @@ class Orm
         return $this->client->getConnection()->{$this->client->getDatabase()}->{$table};
     }
 
-    public function getUnique(): array
-    {
-        return $this->unique ?? [];
-    }
-
     public function exists(BaseModel $entity): bool
     {
         $unique = $entity->getUnique();
@@ -84,16 +79,16 @@ class Orm
         throw new OrmException('No ' . $entity . ' record found to match this query ' . print_r($query, true) . '.');
     }
 
-    public function all(string $entity, array $query): Collection
-    {
-        $result = $this->collection($entity::getTable())->find($query)->toArray();
-
-        if (count($result) > 0) {
-            //return $entity::hydrate($result[0]);
-        }
-
-        throw new OrmException('No ' . $entity . ' record found to match this query ' . print_r($query, true) . '.');
-    }
+    // public function all(string $entity, array $query): Collection
+    // {
+    //     $result = $this->collection($entity::getTable())->find($query)->toArray();
+    //
+    //     if (count($result) > 0) {
+    //         //return $entity::hydrate($result[0]);
+    //     }
+    //
+    //     throw new OrmException('No ' . $entity . ' record found to match this query ' . print_r($query, true) . '.');
+    // }
 
     public function count(string $entity, array $query): int
     {
@@ -122,15 +117,15 @@ class Orm
         throw new OrmException('Cannot duplicate this ' . get_class($entity) . ' record, already exists.');
     }
 
-    public function update(Hydrate $entity)
-    {
-
-    }
-
-    public function delete(Hydrate $entity)
-    {
-
-    }
+    // public function update(Hydrate $entity)
+    // {
+    //
+    // }
+    //
+    // public function delete(Hydrate $entity)
+    // {
+    //
+    // }
 
     public function drop(string $entity): bool
     {

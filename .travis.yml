@@ -12,13 +12,13 @@ before_install: echo "extension = <extension>.so" >> ~/.phpenv/versions/$(phpenv
 
 install:
     - pecl install -f mongodb
-    
+
 before_script:
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-    - vendor/bin/phpstan analyse src tests --level 7
+    - vendor/bin/phpstan analyse -l 7 -c phpstan.neon tests src public
     - vendor/bin/phpunit tests/Unit --coverage-clover=coverage.xml
 
 after_success:

@@ -18,7 +18,7 @@ class UserTest extends FeatureCase
     {
         $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->makeToken(1, 'user', getenv('TOKEN_SECRET'), 10, 'test');
+        $jwt = $token->makeToken('1abc4', 'user', getenv('TOKEN_SECRET'), 10, 'test');
 
         $response = $this->request(
             'POST',

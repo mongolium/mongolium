@@ -1,5 +1,9 @@
 <?php
 
+$config = require '../src/config.php';
+
+$container = new \Slim\Container($config);
+
 $container['Orm'] = function ($container) {
     return new Mongolium\Services\Db\Orm(
         Mongolium\Services\Db\Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'))
@@ -23,3 +27,5 @@ $container['UserController'] = function ($container) {
         )
     );
 };
+
+return $container;

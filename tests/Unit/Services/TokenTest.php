@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Services;
+namespace Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
 use Mongolium\Services\Token as TokenService;
@@ -24,7 +24,7 @@ class TokenTest extends TestCase
     {
         $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->makeToken(2, 'admin', '123456*$abcDEF', 5, 'my business');
+        $jwt = $token->makeToken('1237as', 'admin', '123456*$abcDEF', 5, 'my business');
 
         $this->assertTrue(Token::validate($jwt, '123456*$abcDEF'));
     }
@@ -33,11 +33,11 @@ class TokenTest extends TestCase
     {
         $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->makeToken(1, 'editor', '123456*$abcDEF', 5, 'my business');
+        $jwt = $token->makeToken('8343bsc', 'editor', '123456*$abcDEF', 5, 'my business');
 
         $payload = $token->getPayload($jwt);
 
-        $this->assertEquals($payload->user_id, 1);
+        $this->assertEquals($payload->user_id, '8343bsc');
         $this->assertEquals($payload->user_type, 'editor');
     }
 
@@ -45,7 +45,7 @@ class TokenTest extends TestCase
     {
         $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->makeToken(5, 'user', '123456*$abcDEF', 1, 'my business');
+        $jwt = $token->makeToken('bdYufe4', 'user', '123456*$abcDEF', 1, 'my business');
 
         $newJwt = $token->renewToken($jwt, '123456*$abcDEF', 21);
 
@@ -59,7 +59,7 @@ class TokenTest extends TestCase
     {
         $token = new TokenService(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = Token::getToken(5, '123456*$abcDEF', Carbon::now()->addMinutes(2)->toDateTimeString(), 'my business');
+        $jwt = Token::getToken('342jdIop', '123456*$abcDEF', Carbon::now()->addMinutes(2)->toDateTimeString(), 'my business');
 
         $this->assertTrue($token->validateToken($jwt, '123456*$abcDEF'));
     }

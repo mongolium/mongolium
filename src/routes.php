@@ -4,6 +4,8 @@ use Mongolium\Middleware\Auth;
 use Mongolium\Middleware\Password;
 use Mongolium\Middleware\Basic;
 
+$container  = require '../src/container.php';
+
 $app = new Slim\App($container);
 
 $app->group('', function () use ($app) {
@@ -14,3 +16,5 @@ $app->group('', function () use ($app) {
     $app->post('/user', 'UserController:create')->add(Auth::class);
 
 })->add(Basic::class);
+
+return $app;

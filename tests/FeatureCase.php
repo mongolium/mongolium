@@ -4,8 +4,8 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
-use Throwable;
 use InvalidArgumentException;
+use GuzzleHttp\Exception\ClientException;
 
 class FeatureCase extends TestCase
 {
@@ -27,7 +27,7 @@ class FeatureCase extends TestCase
         catch (InvalidArgumentException $e) {
             $this->fail($e->getMessage());
         }
-        catch (Throwable $e) {
+        catch (ClientException $e) {
             return $e->getResponse();
         }
     }

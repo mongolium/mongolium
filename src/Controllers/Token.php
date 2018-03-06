@@ -8,13 +8,16 @@ use Mongolium\Helper\JsonResponse as JsonResponseHelper;
 use Mongolium\Services\JsonResponse;
 use Mongolium\Helper\BasicAuth;
 use Mongolium\Helper\Environment;
+use Mongolium\Helper\Id;
+use Throwable;
 
 class Token
 {
     use AuthHelper,
     JsonResponseHelper,
     BasicAuth,
-    Environment;
+    Environment,
+    Id;
 
     private $token;
 

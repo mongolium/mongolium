@@ -10,6 +10,8 @@ abstract class BaseModel implements Hydrator
 
     protected static $table;
 
+    protected static $unique;
+
     public static function getTable(): string
     {
         return static::$table;
