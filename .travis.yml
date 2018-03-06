@@ -1,11 +1,12 @@
 env:
-    - DEVELOPMENT=true
-    - TOKEN_SECRET="abcD$1234!ef56"
-    - TOKEN_EXPIRY=2
-    - TOKEN_ISSUER=mongolium
-    - MONGO_HOST="localhost"
-    - MONGO_PORT=27017
-    - MONGO_DATABASE="test"
+    global:
+        - DEVELOPMENT=true
+        - TOKEN_SECRET="abcD$1234!ef56"
+        - TOKEN_EXPIRY=2
+        - TOKEN_ISSUER=mongolium
+        - MONGO_HOST="localhost"
+        - MONGO_PORT=27017
+        - MONGO_DATABASE="test"
 
 language: php
 
