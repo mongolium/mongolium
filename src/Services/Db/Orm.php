@@ -100,7 +100,6 @@ class Orm
         $entity = $entityString::hydrate($this->cleanId($data));
 
         if (!$this->hasId($entity) && !$this->exists($entity)) {
-
             $collection = $this->collection($entity::getTable());
 
             $data = $entity->extract();

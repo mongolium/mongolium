@@ -13,7 +13,6 @@ use Mockery as m;
 
 class UserTest extends FeatureCase
 {
-
     public function testCreateUser()
     {
         $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
@@ -40,5 +39,4 @@ class UserTest extends FeatureCase
 
         $orm->drop(User::class);
     }
-
 }

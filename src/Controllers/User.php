@@ -37,8 +37,7 @@ class User
                     ]
                 )
             );
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             return $this->jsonResponse($response,
                 new JsonResponse(
                     400,

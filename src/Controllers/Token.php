@@ -38,8 +38,7 @@ class Token
                 $this->env('TOKEN_EXPIRY'),
                 $this->env('TOKEN_ISSUER')
             );
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             return $this->jsonResponse($response,
                 new JsonResponse(
                     401,
