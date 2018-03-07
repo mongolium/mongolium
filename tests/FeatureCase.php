@@ -22,7 +22,7 @@ class FeatureCase extends TestCase
     protected function request(string $type, string $url, array $data = [])
     {
         try {
-            return $this->client->request($type, 'http://127.0.0.1' . $url, $data);
+            return $this->client->request($type, getenv('TEST_HOST') . getenv('TEST_PORT'), $data);
         }
         catch (InvalidArgumentException $e) {
             $this->fail($e->getMessage());
