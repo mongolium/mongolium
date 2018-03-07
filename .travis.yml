@@ -17,7 +17,8 @@ before_script:
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction --prefer-source --dev
     # Check Mongo
-    - service mongodb status
+    - sudo service mongod status
+    - sudo service mongodb status
     - sleep 5
     # Set up PHP server
     - cd public
