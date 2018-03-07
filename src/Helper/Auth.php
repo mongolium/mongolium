@@ -14,7 +14,7 @@ trait Auth
 
             $authParts = explode(',', $authHeader);
 
-            $authPart = array_filter($authParts, function($row) use ($attribute) {
+            $authPart = array_filter($authParts, function ($row) use ($attribute) {
                 return preg_match('|^' . trim($attribute) . '\s|', $row);
             });
 

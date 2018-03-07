@@ -19,8 +19,7 @@ trait JsonResponse
                 'code' => $jsonResponse->getCode(),
                 'message' => $jsonResponse->getMessage()
             ];
-        }
-        elseif (!empty($jsonResponse->getData())) {
+        } elseif (!empty($jsonResponse->getData())) {
             $data['data'] = $jsonResponse->getData();
         }
 

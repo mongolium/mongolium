@@ -23,11 +23,9 @@ class FeatureCase extends TestCase
     {
         try {
             return $this->client->request($type, 'http://' . getenv('TEST_HOST') . ':' . getenv('TEST_PORT') . $url, $data);
-        }
-        catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->fail($e->getMessage());
-        }
-        catch (ClientException $e) {
+        } catch (ClientException $e) {
             return $e->getResponse();
         }
     }
