@@ -2,8 +2,8 @@ language: php
 
 php:
     - 7.0
-    #- 7.1
-    #- 7.2
+    - 7.1
+    - 7.2
 
 service:
     - mongodb
@@ -16,7 +16,7 @@ install:
 before_script:
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction --prefer-source --dev
-    # Check Mongo
+    # Start Mongo
     - sudo service mongod start
     - sleep 5
     # Set up PHP server
