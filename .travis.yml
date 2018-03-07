@@ -8,7 +8,7 @@ php:
 service:
     - mongodb
 
-before_install: echo "extension = <extension>.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+before_install: echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
     - pecl install -f mongodb
