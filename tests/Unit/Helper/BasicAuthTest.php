@@ -58,4 +58,17 @@ class BasicAuthTest extends TestCase
     {
         $this->assertEquals(0, count($this->decode('123Abc')));
     }
+
+    public function testEncode()
+    {
+        $this->assertTrue(is_string($this->encode('rob', 'waller')));
+    }
+
+    public function testEncodeDecode()
+    {
+        $result = $this->decode($this->encode('rob', 'waller'));
+
+        $this->assertEquals('rob', $result['username']);
+        $this->assertEquals('waller', $result['password']);
+    }
 }

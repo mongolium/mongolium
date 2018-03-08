@@ -117,7 +117,7 @@ class TokenTest extends FeatureCase
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertEquals('401', $json->errors->code);
-        $this->assertEquals('Unathorised: Please provide a valid authentication token', $json->errors->message);
+        $this->assertEquals('Unauthorized: Please provide a valid authentication token', $json->errors->message);
     }
 
     public function tearDown()

@@ -3,14 +3,13 @@
 namespace Mongolium\Controllers;
 
 use Mongolium\Services\User as UserService;
-use Mongolium\Helper\JsonResponse as JsonResponseHelper;
 use Mongolium\Helper\Id;
-use Mongolium\Services\JsonResponse;
+use Mongolium\Services\Response\Response;
 use Throwable;
 
 class User
 {
-    use JsonResponseHelper, Id;
+    use Id;
 
     protected $user;
 
@@ -24,32 +23,24 @@ class User
         try {
             $result = $this->user->create($request->getParsedBody());
 
-            return $this->jsonResponse($response,
-                new JsonResponse(
-                    201,
-                    'OK',
-                    $this->generateUniqueId(),
-                    'user',
-                    $result->extract(),
-                    [
-                        'self' => '/user',
-                        'token' => '/token'
-                    ]
-                )
+            return Response::make()->respond201(
+                $response,
+                $this->uniqueId(),
+                'user',
+                $result->extract(),
+                [
+                    'self' => '/user',
+                    'token' => '/token'
+                ]
             );
         } catch (Throwable $e) {
-            return $this->jsonResponse($response,
-                new JsonResponse(
-                    400,
-                    'Bad Request: ' . $e->getMessage(),
-                    $this->generateUniqueId(),
-                    'error',
-                    [],
-                    [
-                        'self' => '/user',
-                        'token' => '/token'
-                    ]
-                )
+            return Response::make()->respond401(
+                $response,
+                $e->getMessage(),
+                [
+                    'self' => '/user',
+                    'token' => '/token'
+                ]
             );
         }
     }

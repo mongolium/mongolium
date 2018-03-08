@@ -4,7 +4,7 @@ namespace Mongolium\Helper;
 
 trait Id
 {
-    public function generateUniqueId()
+    public function uniqueId()
     {
         return uniqid('mnglm_');
     }

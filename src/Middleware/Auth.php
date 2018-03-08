@@ -5,43 +5,31 @@ namespace Mongolium\Middleware;
 use Mongolium\Helper\Auth as AuthHelper;
 use ReallySimpleJWT\Token;
 use Throwable;
-use Mongolium\Helper\JsonResponse as JsonResponseHelper;
-use Mongolium\Services\JsonResponse;
-use Mongolium\Helper\Id;
+use Mongolium\Services\Response\Response;
+use Slim\Http\Response as SlimResponse;
+use Slim\Http\Request;
 
 class Auth
 {
-    use AuthHelper, JsonResponseHelper, Id;
+    use AuthHelper;
 
-    public function __invoke($request, $response, $next)
+    public function __invoke(Request $request, SlimResponse $response, $next): SlimResponse
     {
         try {
             if (empty($request->getAttribute('bearer_token'))) {
-                return $this->jsonResponse(
+                return Response::make()->respond400(
                     $response,
-                    new JsonResponse(
-                        400,
-                        'Bad Request: Please provide an authentication token',
-                        $this->generateUniqueId(),
-                        'error',
-                        [],
-                        ['token' => '/token']
-                    )
+                    'Please provide an authentication token',
+                    ['token' => '/token']
                 );
             }
 
             Token::validate($request->getAttribute('bearer_token'), getenv('TOKEN_SECRET'));
         } catch (Throwable $e) {
-            return $this->jsonResponse(
+            return Response::make()->respond401(
                 $response,
-                new JsonResponse(
-                    401,
-                    'Unathorised: Please provide a valid authentication token',
-                    $this->generateUniqueId(),
-                    'error',
-                    [],
-                    ['token' => '/token']
-                )
+                'Please provide a valid authentication token',
+                ['token' => '/token']
             );
         }
 

@@ -4,20 +4,16 @@ namespace Mongolium\Controllers;
 
 use Mongolium\Services\Token as TokenService;
 use Mongolium\Helper\Auth as AuthHelper;
-use Mongolium\Helper\JsonResponse as JsonResponseHelper;
-use Mongolium\Services\JsonResponse;
 use Mongolium\Helper\BasicAuth;
 use Mongolium\Helper\Environment;
-use Mongolium\Helper\Id;
+use Mongolium\Services\Response\Response;
 use Throwable;
 
 class Token
 {
     use AuthHelper,
-    JsonResponseHelper,
     BasicAuth,
-    Environment,
-    Id;
+    Environment;
 
     private $token;
 
@@ -39,47 +35,34 @@ class Token
                 $this->env('TOKEN_ISSUER')
             );
         } catch (Throwable $e) {
-            return $this->jsonResponse($response,
-                new JsonResponse(
-                    401,
-                    'Unathorised: ' . $e->getMessage(),
-                    $this->generateUniqueId(),
-                    'error',
-                    [],
-                    [
-                        'self' => '/token'
-                    ]
-                )
+            return Response::make()->respond401(
+                $response,
+                $e->getMessage(),
+                ['self' => '/token']
             );
         }
 
-        return $this->jsonResponse($response,
-            new JsonResponse(
-                201,
-                'OK',
+        return Response::make()->respond201(
+                $response,
                 $token,
                 'token',
                 [],
                 ['self' => '/token']
-            )
         );
     }
 
     public function update($request, $response)
     {
-        return $this->jsonResponse($response,
-            new JsonResponse(
-                200,
-                'OK',
-                $this->token->renewToken(
-                    $request->getAttribute('bearer_token'),
-                    getenv('TOKEN_SECRET'),
-                    getenv('TOKEN_EXPIRY')
-                ),
-                'token',
-                [],
-                ['self' => '/token']
-            )
+        return Response::make()->respond200(
+            $response,
+            $this->token->renewToken(
+                $request->getAttribute('bearer_token'),
+                getenv('TOKEN_SECRET'),
+                getenv('TOKEN_EXPIRY')
+            ),
+            'token',
+            [],
+            ['self' => '/token']
         );
     }
 }
