@@ -5,6 +5,8 @@ namespace Mongolium\Controllers;
 use Mongolium\Services\User as UserService;
 use Mongolium\Helper\Id;
 use Mongolium\Services\Response\Response;
+use Slim\Http\Response as SlimResponse;
+use Slim\Http\Request;
 use Throwable;
 
 class User
@@ -18,7 +20,7 @@ class User
         $this->user = $user;
     }
 
-    public function create($request, $response)
+    public function create(Request $request, SlimResponse $response): SlimResponse
     {
         try {
             $result = $this->user->create($request->getParsedBody());
