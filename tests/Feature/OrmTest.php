@@ -6,6 +6,7 @@ use Tests\FeatureCase;
 use Mongolium\Services\Db\Orm;
 use Mongolium\Services\Db\Client;
 use Mongolium\Model\User;
+use ReallySimple\Collection;
 
 class OrmTest extends FeatureCase
 {
@@ -66,7 +67,7 @@ class OrmTest extends FeatureCase
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
         $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(User::class, ['username' => 'john', 'password' => 'galt', 'type' => 'admin']);
+        $orm->create(User::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
 
         $this->assertEquals(2, $orm->count(User::class, ['type' => 'admin']));
     }
@@ -76,6 +77,73 @@ class OrmTest extends FeatureCase
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
         $this->assertEquals(0, $orm->count(User::class, ['username' => 'rob']));
+    }
+
+    public function testUpdate()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $result = $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+
+        $data = $result->extract();
+
+        $query = ['id' => $data['id']];
+
+        $data = ['type' => 'user'];
+
+        $update = $orm->update(User::class, $query, $data);
+
+        $this->assertInstanceOf(User::class, $update);
+
+        $updateData = $update->extract();
+
+        $this->assertEquals('user', $updateData['type']);
+    }
+
+    public function testAll()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $orm->create(User::class, ['username' => 'john', 'password' => 'smith', 'type' => 'user']);
+
+        $collection = $orm->all(User::class);
+
+        $this->assertInstanceOf(Collection::class, $collection);
+
+        $this->assertEquals(2, $collection->count());
+
+        $this->assertInstanceOf(User::class, $collection->first());
+    }
+
+    public function testAllWithQuery()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $orm->create(User::class, ['username' => 'john', 'password' => 'smith', 'type' => 'user']);
+        $orm->create(User::class, ['username' => 'ada', 'password' => 'jones', 'type' => 'user']);
+
+        $collection = $orm->all(User::class, ['type' => 'user']);
+
+        $this->assertEquals(2, $collection->count());
+
+        $this->assertInstanceOf(User::class, $collection->first());
+    }
+
+    public function testDelete()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $orm->create(User::class, ['username' => 'john', 'password' => 'smith', 'type' => 'user']);
+        $orm->create(User::class, ['username' => 'ada', 'password' => 'jones', 'type' => 'user']);
+
+        $this->assertTrue($orm->delete(User::class, ['username' => 'john']));
+
+        $all = $orm->all(User::class);
+
+        $this->assertEquals(2, $all->count());
     }
 
     public function tearDown()

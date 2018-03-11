@@ -13,6 +13,7 @@
         "php": ">=7.0",
         "nesbot/carbon": "1.22.*",
         "rbdwllr/reallysimplejwt": "1.0.*",
+        "rbdwllr/reallysimplecollection": "dev-master",
         "vlucas/phpdotenv": "2.4.*",
         "slim/slim": "3.9.*",
         "guzzlehttp/guzzle": "6.3.*",

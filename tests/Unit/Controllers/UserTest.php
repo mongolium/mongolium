@@ -46,5 +46,7 @@ class UserTest extends TestCase
 
         $this->assertRegExp('|"id":"1"|', $data);
         $this->assertRegExp('|"username":"rob"|', $data);
+        $this->assertRegExp('|"password":"w"|', $data);
+        $this->assertRegExp('|"type":"user"|', $data);
     }
 }

@@ -6,6 +6,10 @@ use Mongolium\Services\Db\Client;
 use Mongolium\Services\Db\Hydratpr;
 use Mongolium\Exceptions\OrmException;
 use Mongolium\Services\Db\BaseModel;
+use MongoDB\InsertOneResult;
+use MongoDB\BSON\ObjectId;
+use ReallySimple\Collection;
+use Error;
 
 class Orm
 {
@@ -32,6 +36,16 @@ class Orm
         return $this->count(get_class($entity), ['$or' => [$filter]]) >= 1;
     }
 
+    public function buildId(array $data): array
+    {
+        if (isset($data['id'])) {
+            $data['_id'] = new ObjectId($data['id']);
+            unset($data['id']);
+        }
+
+        return $data;
+    }
+
     public function cleanId(array $data): array
     {
         $data['id'] = '';
@@ -52,12 +66,12 @@ class Orm
         return !empty($data['id']);
     }
 
-    public function findAsArray(string $entity, array $query): array
+    public function findAsArray(string $entity, array $query = []): array
     {
         return $this->collection($entity::getTable())->find($query)->toArray();
     }
 
-    public function findOneAsArray(string $entity, array $query): array
+    public function findOneAsArray(string $entity, array $query = []): array
     {
         $result = $this->findAsArray($entity, $query);
 
@@ -79,52 +93,93 @@ class Orm
         throw new OrmException('No ' . $entity . ' record found to match this query ' . print_r($query, true) . '.');
     }
 
-    // public function all(string $entity, array $query): Collection
-    // {
-    //     $result = $this->collection($entity::getTable())->find($query)->toArray();
-    //
-    //     if (count($result) > 0) {
-    //         //return $entity::hydrate($result[0]);
-    //     }
-    //
-    //     throw new OrmException('No ' . $entity . ' record found to match this query ' . print_r($query, true) . '.');
-    // }
+    public function all(string $entityString, array $query = []): Collection
+    {
+        $result = $this->findAsArray($entityString, $query);
+
+        $items = [];
+
+        if (count($result) > 0) {
+            foreach ($result as $item) {
+                $entity = $entityString::hydrate($this->cleanDbId(get_object_vars($item)));
+
+                $items[] = $entity;
+            }
+
+            return new Collection($items);
+        }
+
+        throw new OrmException('No ' . $entityString . ' record found to match this query ' . print_r($query, true) . '.');
+    }
 
     public function count(string $entity, array $query): int
     {
         return $this->collection($entity::getTable())->count($query);
     }
 
+    public function insertEntity(BaseModel $entity): InsertOneResult
+    {
+        $collection = $this->collection($entity::getTable());
+
+        $data = $entity->extract();
+
+        unset($data['id']);
+
+        return $collection->insertOne($data);
+    }
+
     public function create(string $entityString, array $data): BaseModel
     {
-        $entity = $entityString::hydrate($this->cleanId($data));
+        try {
+            $entity = $entityString::hydrate($this->cleanId($data));
 
-        if (!$this->hasId($entity) && !$this->exists($entity)) {
-            $collection = $this->collection($entity::getTable());
+            if (!$this->hasId($entity) && !$this->exists($entity)) {
+                $result = $this->insertEntity($entity);
 
-            $data = $entity->extract();
+                $entity->setId($result->getInsertedId());
 
-            unset($data['id']);
-
-            $result = $collection->insertOne($data);
-
-            $entity->setId($result->getInsertedId());
-
-            return $entity::hydrate($entity->extract());
+                return $entity::hydrate($entity->extract());
+            }
+        } catch (Error $e) {
+            throw new OrmException('Could not create ' . $entityString . ' model: ' . $e->getMessage());
         }
 
         throw new OrmException('Cannot duplicate this ' . get_class($entity) . ' record, already exists.');
     }
 
-    // public function update(Hydrate $entity)
-    // {
-    //
-    // }
-    //
-    // public function delete(Hydrate $entity)
-    // {
-    //
-    // }
+    public function update(string $entity, array $query, array $data): BaseModel
+    {
+        try {
+            $collection = $this->collection($entity::getTable());
+
+            $data = ['$set' => $this->buildId($data)];
+
+            $result = $collection->updateOne($this->buildId($query), $data);
+
+            if ($result) {
+                return $this->find($entity, $this->buildId($query));
+            }
+        } catch (Error $e) {
+            throw new OrmException('Could not update ' . $entity . ' model: ' . $e->getMessage());
+        }
+
+        throw new OrmException('Could not update ' . $entity . ' model');
+    }
+
+    public function delete(string $entity, array $query): bool
+    {
+        try {
+            $collection = $this->collection($entity::getTable());
+
+            $collection->deleteOne($this->buildId($query));
+
+            return true;
+        } catch (Error $e) {
+            throw new OrmException('Could not delete ' . $entity . ' model: ' . $e->getMessage());
+        }
+
+        return false;
+    }
 
     public function drop(string $entity): bool
     {
