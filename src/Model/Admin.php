@@ -5,7 +5,7 @@ namespace Mongolium\Model;
 use Mongolium\Services\Db\BaseModel;
 use Mongolium\Services\Db\Hydrator;
 
-class User extends BaseModel
+class Admin extends BaseModel
 {
     private $username;
 
@@ -13,7 +13,7 @@ class User extends BaseModel
 
     private $type;
 
-    protected static $table = 'users';
+    protected static $table = 'admins';
 
     protected static $unique = ['username'];
 

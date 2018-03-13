@@ -8,20 +8,20 @@ use ReallySimpleJWT\TokenValidator;
 use Mongolium\Services\Token;
 use Mongolium\Services\Db\Orm;
 use Mongolium\Services\Db\Client;
-use Mongolium\Model\User;
+use Mongolium\Model\Admin;
 use Mockery as m;
 
-class UserTest extends FeatureCase
+class AdminTest extends FeatureCase
 {
-    public function testCreateUser()
+    public function testCreateAdmin()
     {
         $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->makeToken('1abc4', 'user', getenv('TOKEN_SECRET'), 10, 'test');
+        $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
 
         $response = $this->request(
             'POST',
-            '/user',
+            '/admins',
             ['form_params' => ['username' => 'rob', 'password' => 'hello', 'type' => 'admin'], 'headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );
 
@@ -30,23 +30,23 @@ class UserTest extends FeatureCase
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
-        $this->assertEquals('user', $json->type);
+        $this->assertEquals('admin', $json->type);
     }
 
-    public function testGetAllUsers()
+    public function testGetAllAdmins()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(User::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
+        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $orm->create(Admin::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
 
         $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->makeToken('1abc4', 'user', getenv('TOKEN_SECRET'), 10, 'test');
+        $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
 
         $response = $this->request(
             'GET',
-            '/user',
+            '/admins',
             ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );
 
@@ -62,6 +62,6 @@ class UserTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->drop(User::class);
+        $orm->drop(Admin::class);
     }
 }

@@ -20,9 +20,9 @@ $container['TokenController'] = function ($container) {
     );
 };
 
-$container['UserController'] = function ($container) {
-    return new Mongolium\Controllers\User(
-        new Mongolium\Services\User(
+$container['AdminController'] = function ($container) {
+    return new Mongolium\Controllers\Admin(
+        new Mongolium\Services\Admin(
             $container['Orm']
         )
     );

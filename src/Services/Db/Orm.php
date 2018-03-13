@@ -74,6 +74,8 @@ class Orm
         $parameters = $reflector->getMethod('__construct')->getParameters();
 
         if (count($parameters) >= 1) {
+            $keys = [];
+
             foreach ($parameters as $param) {
                 $keys[] = $param->getName();
             }
@@ -81,9 +83,7 @@ class Orm
             return $keys;
         }
 
-        if (count($filter) === 0) {
-            throw new OrmException('Invalid Model ' . $entity . ' constructor has no parameters.');
-        }
+        throw new OrmException('Invalid Model ' . $entity . ' constructor has no parameters.');
     }
 
     public function validateData(string $entity, array $data)

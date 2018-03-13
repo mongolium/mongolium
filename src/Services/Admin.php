@@ -3,10 +3,10 @@
 namespace Mongolium\Services;
 
 use Mongolium\Services\Db\Orm;
-use Mongolium\Model\User as UserModel;
+use Mongolium\Model\Admin as AdminModel;
 use ReallySimple\Collection;
 
-class User
+class Admin
 {
     private $orm;
 
@@ -15,13 +15,13 @@ class User
         $this->orm = $orm;
     }
 
-    public function create(array $data): UserModel
+    public function create(array $data): AdminModel
     {
-        return $this->orm->create(UserModel::class, $data);
+        return $this->orm->create(AdminModel::class, $data);
     }
 
     public function read(): Collection
     {
-        return $this->orm->all(UserModel::class);
+        return $this->orm->all(AdminModel::class);
     }
 }

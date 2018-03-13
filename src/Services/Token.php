@@ -7,6 +7,7 @@ use ReallySimpleJWT\TokenValidator;
 use Carbon\Carbon;
 use Mongolium\Services\Db\Orm;
 use Mongolium\Exceptions\TokenException;
+use Mongolium\Model\Admin;
 use stdClass;
 
 class Token
@@ -57,8 +58,8 @@ class Token
 
     public function createToken(string $username, string $password, string $secret, int $minutes, string $issuer): string
     {
-        if ($this->orm->count('Mongolium\Model\User', ['username' => $username, 'password' => $password]) === 1) {
-            $user = $this->orm->find('Mongolium\Model\User', ['username' => $username, 'password' => $password]);
+        if ($this->orm->count(Admin::class, ['username' => $username, 'password' => $password]) === 1) {
+            $user = $this->orm->find(Admin::class, ['username' => $username, 'password' => $password]);
 
             $user = $user->extract();
 

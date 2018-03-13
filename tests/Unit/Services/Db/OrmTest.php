@@ -4,7 +4,7 @@ namespace Tests\Unit\Services\Db;
 
 use PHPUnit\Framework\TestCase;
 use Mongolium\Services\Db\Orm;
-use Mongolium\Model\User;
+use Mongolium\Model\Admin;
 use Mockery as m;
 use MongoDB\InsertOneResult;
 
@@ -22,9 +22,9 @@ class OrmTest extends TestCase
             ]
         );
 
-        $result = $orm->find(User::class, ['username' => 'rob']);
+        $result = $orm->find(Admin::class, ['username' => 'rob']);
 
-        $this->assertInstanceOf(User::class, $result);
+        $this->assertInstanceOf(Admin::class, $result);
     }
 
     public function testCreate()
@@ -39,9 +39,9 @@ class OrmTest extends TestCase
             $result
         );
 
-        $user = $orm->create(User::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
 
-        $this->assertInstanceOf(User::class, $user);
+        $this->assertInstanceOf(Admin::class, $admin);
     }
 
     /**
@@ -59,7 +59,7 @@ class OrmTest extends TestCase
             $result
         );
 
-        $user = $orm->create(User::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
     }
 
     /**
@@ -70,7 +70,7 @@ class OrmTest extends TestCase
         $orm = m::mock(Orm::class)->makePartial();
         $orm->shouldReceive('hasId')->once()->andReturn(true);
 
-        $user = $orm->create(User::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
     }
 
     /**
@@ -82,6 +82,6 @@ class OrmTest extends TestCase
         $orm->shouldReceive('hasId')->once()->andReturn(false);
         $orm->shouldReceive('exists')->once()->andReturn(true);
 
-        $user = $orm->create(User::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
     }
 }

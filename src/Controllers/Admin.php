@@ -2,41 +2,41 @@
 
 namespace Mongolium\Controllers;
 
-use Mongolium\Services\User as UserService;
+use Mongolium\Services\Admin as AdminService;
 use Mongolium\Helper\Id;
 use Mongolium\Services\Response\Response;
 use Slim\Http\Response as SlimResponse;
 use Slim\Http\Request;
 use Throwable;
 
-class User
+class Admin
 {
     use Id;
 
-    protected $user;
+    protected $admin;
 
-    public function __construct(UserService $user)
+    public function __construct(AdminService $admin)
     {
-        $this->user = $user;
+        $this->admin = $admin;
     }
 
     public function create(Request $request, SlimResponse $response): SlimResponse
     {
         try {
-            $result = $this->user->create($request->getParsedBody());
+            $result = $this->admin->create($request->getParsedBody());
 
             return Response::make()->respond201(
                 $response,
                 $this->uniqueId(),
-                'user',
+                'admin',
                 $result->extract(),
-                ['self' => '/user', 'token' => '/token']
+                ['self' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
             return Response::make()->respond401(
                 $response,
                 $e->getMessage(),
-                ['self' => '/user', 'token' => '/token']
+                ['self' => '/admins', 'token' => '/token']
             );
         }
     }
@@ -44,7 +44,9 @@ class User
     public function read(Request $request, SlimResponse $response): SlimResponse
     {
         try {
-            $results = $this->user->read($request->getParsedBody());
+            $results = $this->admin->read($request->getParsedBody());
+
+            $data = [];
 
             foreach ($results as $row) {
                 $data[] = $row->hide();
@@ -53,15 +55,15 @@ class User
             return Response::make()->respond200(
                 $response,
                 $this->uniqueId(),
-                'user',
+                'admin',
                 $data,
-                ['self' => '/user', 'token' => '/token']
+                ['self' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
             return Response::make()->respond401(
                 $response,
                 $e->getMessage(),
-                ['self' => '/user', 'token' => '/token']
+                ['self' => '/admins', 'token' => '/token']
             );
         }
     }

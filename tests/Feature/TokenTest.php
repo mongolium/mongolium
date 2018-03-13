@@ -8,7 +8,7 @@ use ReallySimpleJWT\TokenValidator;
 use Mongolium\Services\Token;
 use Mongolium\Services\Db\Orm;
 use Mongolium\Services\Db\Client;
-use Mongolium\Model\User;
+use Mongolium\Model\Admin;
 use Mongolium\Helper\BasicAuth;
 use Mockery as m;
 
@@ -22,9 +22,9 @@ class TokenTest extends FeatureCase
 
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->drop(User::class);
+        $orm->drop(Admin::class);
 
-        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
     }
 
     public function testGetToken()
@@ -77,7 +77,7 @@ class TokenTest extends FeatureCase
     {
         $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
 
-        $jwt = $token->makeToken('1123', 'user', getenv('TOKEN_SECRET'), 10, 'test');
+        $jwt = $token->makeToken('1123', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
 
         $response = $this->request('PATCH', '/token', ['headers' => ['Authorization' => 'Bearer ' . $jwt]]);
 
@@ -124,6 +124,6 @@ class TokenTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->drop(User::class);
+        $orm->drop(Admin::class);
     }
 }

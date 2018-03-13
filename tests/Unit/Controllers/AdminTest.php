@@ -2,40 +2,40 @@
 
 namespace Tests\Unit\Controllers;
 
-use Mongolium\Controllers\User;
-use Mongolium\Services\User as UserService;
-use Mongolium\Model\User as UserModel;
+use Mongolium\Controllers\Admin;
+use Mongolium\Services\Admin as AdminService;
+use Mongolium\Model\Admin as AdminModel;
 use Slim\Http\Response as SlimResponse;
 use Slim\Http\Request;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
 
-class UserTest extends TestCase
+class AdminTest extends TestCase
 {
-    public function testUser()
+    public function testAdmin()
     {
-        $userService = m::mock(UserService::class);
+        $adminService = m::mock(AdminService::class);
 
-        $user = new User($userService);
+        $admin = new Admin($adminService);
 
-        $this->assertInstanceOf(User::class, $user);
+        $this->assertInstanceOf(Admin::class, $admin);
     }
 
-    public function testUserCreate()
+    public function testAdminCreate()
     {
-        $userService = m::mock(UserService::class);
-        $userService->shouldReceive('create')->once()->andReturn(
-            UserModel::hydrate(['id' => '1', 'username' => 'rob', 'password' => 'w', 'type' => 'user'])
+        $adminService = m::mock(AdminService::class);
+        $adminService->shouldReceive('create')->once()->andReturn(
+            AdminModel::hydrate(['id' => '1', 'username' => 'rob', 'password' => 'w', 'type' => 'user'])
         );
 
-        $user = new User($userService);
+        $admin = new Admin($adminService);
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getParsedBody')->once()->andReturn([]);
 
         $response = new SlimResponse(200);
 
-        $result = $user->create($request, $response);
+        $result = $admin->create($request, $response);
 
         $this->assertInstanceOf(SlimResponse::class, $result);
 

@@ -3,13 +3,13 @@
 namespace Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
-use Mongolium\Model\User;
+use Mongolium\Model\Admin;
 
-class UserTest extends TestCase
+class AdminTest extends TestCase
 {
-    public function testUserHydate()
+    public function testAdminHydate()
     {
-        $user = User::hydrate(
+        $admin = Admin::hydrate(
             [
                 'id' => '1a',
                 'username' => 'rob',
@@ -18,16 +18,16 @@ class UserTest extends TestCase
             ]
         );
 
-        $this->assertInstanceOf(User::class, $user);
+        $this->assertInstanceOf(Admin::class, $admin);
     }
 
     public function testGetTable()
     {
-        $this->assertEquals('users', User::getTable());
+        $this->assertEquals('admins', Admin::getTable());
     }
 
     public function testGetUnique()
     {
-        $this->assertEquals('username', User::getUnique()[0]);
+        $this->assertEquals('username', Admin::getUnique()[0]);
     }
 }
