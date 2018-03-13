@@ -100,6 +100,65 @@ class OrmTest extends FeatureCase
         $this->assertEquals('user', $updateData['type']);
     }
 
+    /**
+     * @expectedException Mongolium\Exceptions\OrmException
+     */
+    public function testUpdateBadData()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $result = $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+
+        $data = $result->extract();
+
+        $query = ['id' => $data['id']];
+
+        $data = ['foo' => 'bar'];
+
+        $update = $orm->update(User::class, $query, $data);
+    }
+
+    public function testUpdateMany()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $orm->create(User::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
+
+        $query = ['type' => 'admin'];
+
+        $data = ['type' => 'user'];
+
+        $update = $orm->updateMany(User::class, $query, $data);
+
+        $this->assertInstanceOf(Collection::class, $update);
+
+        $this->assertEquals(2, $update->count());
+
+        $first = $update->first();
+
+        $this->assertInstanceOf(User::class, $first);
+
+        $this->assertEquals('user', $first->extract()['type']);
+    }
+
+    /**
+     * @expectedException Mongolium\Exceptions\OrmException
+     */
+    public function testUpdateManyBadData()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->create(User::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $orm->create(User::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
+
+        $query = ['type' => 'admin'];
+
+        $data = ['foo' => 'bar'];
+
+        $update = $orm->updateMany(User::class, $query, $data);
+    }
+
     public function testAll()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));

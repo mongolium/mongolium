@@ -17,6 +17,8 @@ class User extends BaseModel
 
     protected static $unique = ['username'];
 
+    protected $hide = ['password'];
+
     private function __construct(string $id, string $username, string $password, string $type)
     {
         $this->id = $id;

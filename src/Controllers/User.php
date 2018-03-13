@@ -30,19 +30,38 @@ class User
                 $this->uniqueId(),
                 'user',
                 $result->extract(),
-                [
-                    'self' => '/user',
-                    'token' => '/token'
-                ]
+                ['self' => '/user', 'token' => '/token']
             );
         } catch (Throwable $e) {
             return Response::make()->respond401(
                 $response,
                 $e->getMessage(),
-                [
-                    'self' => '/user',
-                    'token' => '/token'
-                ]
+                ['self' => '/user', 'token' => '/token']
+            );
+        }
+    }
+
+    public function read(Request $request, SlimResponse $response): SlimResponse
+    {
+        try {
+            $results = $this->user->read($request->getParsedBody());
+
+            foreach ($results as $row) {
+                $data[] = $row->hide();
+            }
+
+            return Response::make()->respond200(
+                $response,
+                $this->uniqueId(),
+                'user',
+                $data,
+                ['self' => '/user', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond401(
+                $response,
+                $e->getMessage(),
+                ['self' => '/user', 'token' => '/token']
             );
         }
     }

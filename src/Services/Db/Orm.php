@@ -9,6 +9,7 @@ use Mongolium\Services\Db\BaseModel;
 use MongoDB\InsertOneResult;
 use MongoDB\BSON\ObjectId;
 use ReallySimple\Collection;
+use ReflectionClass;
 use Error;
 
 class Orm
@@ -64,6 +65,39 @@ class Orm
         $data = $entity->extract();
 
         return !empty($data['id']);
+    }
+
+    public function getEntityProperties(string $entity): array
+    {
+        $reflector = new ReflectionClass($entity);
+
+        $parameters = $reflector->getMethod('__construct')->getParameters();
+
+        if (count($parameters) >= 1) {
+            foreach ($parameters as $param) {
+                $keys[] = $param->getName();
+            }
+
+            return $keys;
+        }
+
+        if (count($filter) === 0) {
+            throw new OrmException('Invalid Model ' . $entity . ' constructor has no parameters.');
+        }
+    }
+
+    public function validateData(string $entity, array $data)
+    {
+        $entityKeys = $this->getEntityProperties($entity);
+        $dataKeys = array_keys($data);
+
+        $filter = array_filter($entityKeys, function ($key) use ($dataKeys) {
+            return in_array($key, $dataKeys);
+        });
+
+        if (count($filter) === 0) {
+            throw new OrmException('Data ' . print_r($data, true) . ' not valid for model ' . $entity);
+        }
     }
 
     public function findAsArray(string $entity, array $query = []): array
@@ -149,6 +183,8 @@ class Orm
 
     public function update(string $entity, array $query, array $data): BaseModel
     {
+        $this->validateData($entity, $data);
+
         try {
             $collection = $this->collection($entity::getTable());
 
@@ -158,6 +194,27 @@ class Orm
 
             if ($result) {
                 return $this->find($entity, $this->buildId($query));
+            }
+        } catch (Error $e) {
+            throw new OrmException('Could not update ' . $entity . ' model: ' . $e->getMessage());
+        }
+
+        throw new OrmException('Could not update ' . $entity . ' model');
+    }
+
+    public function updateMany(string $entity, array $query, array $data)
+    {
+        $this->validateData($entity, $data);
+
+        try {
+            $collection = $this->collection($entity::getTable());
+
+            $set = ['$set' => $this->buildId($data)];
+
+            $result = $collection->updateMany($this->buildId($query), $set);
+
+            if ($result) {
+                return $this->all($entity, $this->buildId($data));
             }
         } catch (Error $e) {
             throw new OrmException('Could not update ' . $entity . ' model: ' . $e->getMessage());
