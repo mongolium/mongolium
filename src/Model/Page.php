@@ -3,8 +3,9 @@
 namespace Mongolium\Model;
 
 use Mongolium\Services\Db\BaseModel;
+use Mongolium\Services\Db\Hydrator;
 
-class Page
+class Page extends BaseModel
 {
     protected $title;
 
@@ -22,9 +23,9 @@ class Page
 
     protected $updatedAt;
 
-    protected $table = 'pages';
+    protected static $table = 'pages';
 
-    protected $unique = ['title', 'slug'];
+    protected static $unique = ['title', 'slug'];
 
     public function __construct(
         string $id,
@@ -57,7 +58,7 @@ class Page
         $this->updatedAt = $updatedAt;
     }
 
-    public static function hydrate(array $data): self
+    public static function hydrate(array $data): Hydrator
     {
         return new static(
             $data['id'],

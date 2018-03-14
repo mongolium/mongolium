@@ -12,7 +12,7 @@ class Admin
 
         $admin = [
             'username' => $faker->unique()->userName,
-            'password' => $faker->randomNumber(5) . $faker->word() . $faker->randomNumber(3),
+            'password' => $faker->randomNumber(5) . $faker->word . $faker->randomNumber(3),
             'first_name' => $faker->firstName,
             'last_name' => $faker->lastName,
             'email' => $faker->unique()->email,
@@ -22,7 +22,7 @@ class Admin
         ];
 
         if ($withId) {
-            $admin['id'] = $faker->randomNumber(5) . $faker->word();
+            $admin['id'] = $faker->randomNumber(5) . $faker->word;
         }
 
         return $admin;
