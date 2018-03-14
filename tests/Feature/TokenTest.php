@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\FeatureCase;
+use Tests\Helper\Admin as AdminHelper;
 use ReallySimpleJWT\TokenBuilder;
 use ReallySimpleJWT\TokenValidator;
 use Mongolium\Services\Token;
@@ -23,13 +24,15 @@ class TokenTest extends FeatureCase
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
         $orm->drop(Admin::class);
-
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
     }
 
     public function testGetToken()
     {
-        $response = $this->request('POST', '/token', ['headers' => ['Authorization' => 'Basic ' . $this->encode('rob', 'waller')]]);
+        $admin = AdminHelper::admin();
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $result = $orm->create(Admin::class, $admin);
+
+        $response = $this->request('POST', '/token', ['headers' => ['Authorization' => 'Basic ' . $this->encode($admin['username'], $admin['password'])]]);
 
         $json = json_decode($response->getBody());
 

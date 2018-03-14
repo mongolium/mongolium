@@ -5,6 +5,7 @@ namespace Mongolium\Controllers;
 use Mongolium\Services\Admin as AdminService;
 use Mongolium\Helper\Id;
 use Mongolium\Services\Response\Response;
+use Mongolium\Services\Token;
 use Slim\Http\Response as SlimResponse;
 use Slim\Http\Request;
 use Throwable;

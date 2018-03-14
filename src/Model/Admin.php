@@ -7,19 +7,39 @@ use Mongolium\Services\Db\Hydrator;
 
 class Admin extends BaseModel
 {
-    private $username;
+    protected $username;
 
-    private $password;
+    protected $password;
 
-    private $type;
+    protected $email;
+
+    protected $firstName;
+
+    protected $lastName;
+
+    protected $type;
+
+    protected $createdAt;
+
+    protected $updatedAt;
 
     protected static $table = 'admins';
 
     protected static $unique = ['username'];
 
-    protected $hide = ['password'];
+    protected $hide = ['password', 'email'];
 
-    private function __construct(string $id, string $username, string $password, string $type)
+    protected function __construct(
+        string $id,
+        string $username,
+        string $password,
+        string $email,
+        string $firstName,
+        string $lastName,
+        string $type,
+        string $createdAt,
+        string $updatedAt
+    )
     {
         $this->id = $id;
 
@@ -27,7 +47,17 @@ class Admin extends BaseModel
 
         $this->password = $password;
 
+        $this->email = $email;
+
+        $this->firstName = $firstName;
+
+        $this->lastName = $lastName;
+
         $this->type = $type;
+
+        $this->createdAt = $createdAt;
+
+        $this->updatedAt = $updatedAt;
     }
 
     public static function hydrate(array $data): Hydrator
@@ -36,7 +66,12 @@ class Admin extends BaseModel
             $data['id'],
             $data['username'],
             $data['password'],
-            $data['type']
+            $data['email'],
+            $data['first_name'],
+            $data['last_name'],
+            $data['type'],
+            $data['created_at'],
+            $data['updated_at']
         );
     }
 
@@ -46,7 +81,12 @@ class Admin extends BaseModel
             'id' => $this->id,
             'username' => $this->username,
             'password' => $this->password,
-            'type' => $this->type
+            'email' => $this->email,
+            'first_name' => $this->firstName,
+            'last_name' => $this->lastName,
+            'type' => $this->type,
+            'created_at' => $this->createdAt,
+            'updated_at' => $this->updatedAt,
         ];
     }
 }

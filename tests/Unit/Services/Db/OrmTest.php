@@ -5,6 +5,7 @@ namespace Tests\Unit\Services\Db;
 use PHPUnit\Framework\TestCase;
 use Mongolium\Services\Db\Orm;
 use Mongolium\Model\Admin;
+use Tests\Helper\Admin as AdminHelper;
 use Mockery as m;
 use MongoDB\InsertOneResult;
 
@@ -12,17 +13,12 @@ class OrmTest extends TestCase
 {
     public function testFind()
     {
-        $orm = m::mock(Orm::class)->makePartial();
-        $orm->shouldReceive('findOneAsArray')->once()->andReturn(
-            [
-                'id' => '123',
-                'username' => 'rob',
-                'password' => 'w',
-                'type' => 'admin'
-            ]
-        );
+        $admin = AdminHelper::admin(true);
 
-        $result = $orm->find(Admin::class, ['username' => 'rob']);
+        $orm = m::mock(Orm::class)->makePartial();
+        $orm->shouldReceive('findOneAsArray')->once()->andReturn($admin);
+
+        $result = $orm->find(Admin::class, ['username' => $admin['username']]);
 
         $this->assertInstanceOf(Admin::class, $result);
     }
@@ -39,7 +35,7 @@ class OrmTest extends TestCase
             $result
         );
 
-        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, AdminHelper::admin());
 
         $this->assertInstanceOf(Admin::class, $admin);
     }
@@ -59,7 +55,7 @@ class OrmTest extends TestCase
             $result
         );
 
-        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, AdminHelper::admin());
     }
 
     /**
@@ -70,7 +66,7 @@ class OrmTest extends TestCase
         $orm = m::mock(Orm::class)->makePartial();
         $orm->shouldReceive('hasId')->once()->andReturn(true);
 
-        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, AdminHelper::admin());
     }
 
     /**
@@ -82,6 +78,6 @@ class OrmTest extends TestCase
         $orm->shouldReceive('hasId')->once()->andReturn(false);
         $orm->shouldReceive('exists')->once()->andReturn(true);
 
-        $admin = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'we', 'type' => 'editor']);
+        $admin = $orm->create(Admin::class, AdminHelper::admin());
     }
 }

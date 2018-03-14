@@ -8,6 +8,7 @@ use Mongolium\Model\Admin as AdminModel;
 use Slim\Http\Response as SlimResponse;
 use Slim\Http\Request;
 use PHPUnit\Framework\TestCase;
+use Tests\Helper\Admin as AdminHelper;
 use Mockery as m;
 
 class AdminTest extends TestCase
@@ -23,19 +24,21 @@ class AdminTest extends TestCase
 
     public function testAdminCreate()
     {
+        $admin = AdminHelper::admin(true);
+
         $adminService = m::mock(AdminService::class);
         $adminService->shouldReceive('create')->once()->andReturn(
-            AdminModel::hydrate(['id' => '1', 'username' => 'rob', 'password' => 'w', 'type' => 'user'])
+            AdminModel::hydrate($admin)
         );
 
-        $admin = new Admin($adminService);
+        $adminController = new Admin($adminService);
 
         $request = m::mock(Request::class);
         $request->shouldReceive('getParsedBody')->once()->andReturn([]);
 
         $response = new SlimResponse(200);
 
-        $result = $admin->create($request, $response);
+        $result = $adminController->create($request, $response);
 
         $this->assertInstanceOf(SlimResponse::class, $result);
 
@@ -44,9 +47,9 @@ class AdminTest extends TestCase
 
         $data = $result->__toString();
 
-        $this->assertRegExp('|"id":"1"|', $data);
-        $this->assertRegExp('|"username":"rob"|', $data);
-        $this->assertRegExp('|"password":"w"|', $data);
-        $this->assertRegExp('|"type":"user"|', $data);
+        $this->assertRegExp('|"id":"' . $admin['id'] . '"|', $data);
+        $this->assertRegExp('|"username":"' . $admin['username'] . '"|', $data);
+        //$this->assertRegExp('|"password":"' . $admin['password'] . '"|', $data);
+        $this->assertRegExp('|"type":"' . $admin['type'] . '"|', $data);
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\FeatureCase;
+use Tests\Helper\Admin as AdminHelper;
 use Mongolium\Services\Db\Orm;
 use Mongolium\Services\Db\Client;
 use Mongolium\Model\Admin;
@@ -23,15 +24,17 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $result = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $admin = AdminHelper::admin();
+
+        $result = $orm->create(Admin::class, $admin);
 
         $this->assertInstanceOf(Admin::class, $result);
 
         $data = $result->extract();
 
-        $this->assertEquals('rob', $data['username']);
-        $this->assertEquals('waller', $data['password']);
-        $this->assertEquals('admin', $data['type']);
+        $this->assertEquals($admin['username'], $data['username']);
+        $this->assertEquals($admin['password'], $data['password']);
+        $this->assertEquals($admin['type'], $data['type']);
         $this->assertTrue(isset($data['id']));
     }
 
@@ -39,17 +42,19 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $admin = AdminHelper::admin();
 
-        $result = $orm->find(Admin::class, ['username' => 'rob', 'password' => 'waller']);
+        $orm->create(Admin::class, $admin);
+
+        $result = $orm->find(Admin::class, ['username' => $admin['username'], 'password' => $admin['password']]);
 
         $this->assertInstanceOf(Admin::class, $result);
 
         $data = $result->extract();
 
-        $this->assertEquals('rob', $data['username']);
-        $this->assertEquals('waller', $data['password']);
-        $this->assertEquals('admin', $data['type']);
+        $this->assertEquals($admin['username'], $data['username']);
+        $this->assertEquals($admin['password'], $data['password']);
+        $this->assertEquals($admin['type'], $data['type']);
         $this->assertTrue(isset($data['id']));
     }
 
@@ -57,17 +62,25 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $admin = AdminHelper::admin();
 
-        $this->assertEquals(1, $orm->count(Admin::class, ['username' => 'rob']));
+        $orm->create(Admin::class, $admin);
+
+        $this->assertEquals(1, $orm->count(Admin::class, ['username' => $admin['username']]));
     }
 
     public function testCountMultiple()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(Admin::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
+        $admin1 = AdminHelper::admin();
+        $admin1['type'] = 'admin';
+
+        $admin2 = AdminHelper::admin();
+        $admin2['type'] = 'admin';
+
+        $orm->create(Admin::class, $admin1);
+        $orm->create(Admin::class, $admin2);
 
         $this->assertEquals(2, $orm->count(Admin::class, ['type' => 'admin']));
     }
@@ -83,7 +96,7 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $result = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $result = $orm->create(Admin::class, AdminHelper::admin());
 
         $data = $result->extract();
 
@@ -107,7 +120,7 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $result = $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
+        $result = $orm->create(Admin::class, AdminHelper::admin());
 
         $data = $result->extract();
 
@@ -122,12 +135,22 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(Admin::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
+        $admin1 = AdminHelper::admin();
+        $admin1['type'] = 'admin';
+
+        $admin2 = AdminHelper::admin();
+        $admin2['type'] = 'super_admin';
+
+        $admin3 = AdminHelper::admin();
+        $admin3['type'] = 'admin';
+
+        $orm->create(Admin::class, $admin1);
+        $orm->create(Admin::class, $admin2);
+        $orm->create(Admin::class, $admin3);
 
         $query = ['type' => 'admin'];
 
-        $data = ['type' => 'user'];
+        $data = ['type' => 'editor'];
 
         $update = $orm->updateMany(Admin::class, $query, $data);
 
@@ -139,7 +162,7 @@ class OrmTest extends FeatureCase
 
         $this->assertInstanceOf(Admin::class, $first);
 
-        $this->assertEquals('user', $first->extract()['type']);
+        $this->assertEquals('editor', $first->extract()['type']);
     }
 
     /**
@@ -149,8 +172,9 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(Admin::class, ['username' => 'john', 'password' => 'smith', 'type' => 'admin']);
+        $orm->create(Admin::class, AdminHelper::admin());
+
+        $orm->create(Admin::class, AdminHelper::admin());
 
         $query = ['type' => 'admin'];
 
@@ -163,8 +187,9 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(Admin::class, ['username' => 'john', 'password' => 'smith', 'type' => 'user']);
+        $orm->create(Admin::class, AdminHelper::admin());
+
+        $orm->create(Admin::class, AdminHelper::admin());
 
         $collection = $orm->all(Admin::class);
 
@@ -179,11 +204,20 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(Admin::class, ['username' => 'john', 'password' => 'smith', 'type' => 'user']);
-        $orm->create(Admin::class, ['username' => 'ada', 'password' => 'jones', 'type' => 'user']);
+        $admin1 = AdminHelper::admin();
+        $admin1['type'] = 'editor';
 
-        $collection = $orm->all(Admin::class, ['type' => 'user']);
+        $admin2 = AdminHelper::admin();
+        $admin2['type'] = 'super_admin';
+
+        $admin3 = AdminHelper::admin();
+        $admin3['type'] = 'editor';
+
+        $orm->create(Admin::class, $admin1);
+        $orm->create(Admin::class, $admin2);
+        $orm->create(Admin::class, $admin3);
+
+        $collection = $orm->all(Admin::class, ['type' => 'editor']);
 
         $this->assertEquals(2, $collection->count());
 
@@ -194,9 +228,14 @@ class OrmTest extends FeatureCase
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
-        $orm->create(Admin::class, ['username' => 'rob', 'password' => 'waller', 'type' => 'admin']);
-        $orm->create(Admin::class, ['username' => 'john', 'password' => 'smith', 'type' => 'user']);
-        $orm->create(Admin::class, ['username' => 'ada', 'password' => 'jones', 'type' => 'user']);
+        $orm->create(Admin::class, AdminHelper::admin());
+
+        $admin = AdminHelper::admin();
+        $admin['username'] = 'john';
+
+        $orm->create(Admin::class, $admin);
+
+        $orm->create(Admin::class, AdminHelper::admin());
 
         $this->assertTrue($orm->delete(Admin::class, ['username' => 'john']));
 
