@@ -7,6 +7,7 @@ use Slim\Http\Request;
 use Slim\Http\Response as SlimResponse;
 use Mongolium\Services\Response\Response;
 use Mongolium\Helper\Id;
+use Throwable;
 
 class Page
 {
