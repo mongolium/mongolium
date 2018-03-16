@@ -15,6 +15,14 @@ $app->group('', function () use ($app) {
     $app->get('/admins', 'AdminController:read')->add(Auth::class);
     $app->get('/admins/{id}', 'AdminController:read')->add(Auth::class);
     $app->post('/admins', 'AdminController:create')->add(Auth::class);
+
+    $app->get('/posts', 'PostController:read');
+    $app->get('/posts/{id}', 'PostController:read');
+    $app->post('/posts', 'PostController:create')->add(Auth::class);
+
+    $app->get('/pages', 'PageController:read');
+    $app->get('/pages/{id}', 'PageController:read');
+    $app->post('/pages', 'PageController:create')->add(Auth::class);
 })->add(Basic::class);
 
 return $app;

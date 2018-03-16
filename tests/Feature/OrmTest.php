@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use Tests\FeatureCase;
 use Tests\Helper\Admin as AdminHelper;
+use Tests\Helper\Post as PostHelper;
 use Mongolium\Services\Db\Orm;
 use Mongolium\Services\Db\Client;
 use Mongolium\Model\Admin;
+use Mongolium\Model\Post;
 use ReallySimple\Collection;
 
 class OrmTest extends FeatureCase
@@ -18,6 +20,7 @@ class OrmTest extends FeatureCase
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
         $orm->drop(Admin::class);
+        $orm->drop(Post::class);
     }
 
     public function testCreate()
@@ -224,6 +227,23 @@ class OrmTest extends FeatureCase
         $this->assertInstanceOf(Admin::class, $collection->first());
     }
 
+    public function testAllPost()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $orm->create(Post::class, PostHelper::post());
+
+        $orm->create(Post::class, PostHelper::post());
+
+        $collection = $orm->all(Post::class);
+
+        $this->assertInstanceOf(Collection::class, $collection);
+
+        $this->assertEquals(2, $collection->count());
+
+        $this->assertInstanceOf(Post::class, $collection->first());
+    }
+
     public function testDelete()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
@@ -249,5 +269,6 @@ class OrmTest extends FeatureCase
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
         $orm->drop(Admin::class);
+        $orm->drop(Post::class);
     }
 }

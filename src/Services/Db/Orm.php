@@ -11,6 +11,7 @@ use MongoDB\BSON\ObjectId;
 use ReallySimple\Collection;
 use ReflectionClass;
 use Error;
+use MongoDB\Model\BSONArray;
 
 class Orm
 {
@@ -53,11 +54,30 @@ class Orm
         return $data;
     }
 
-    public function cleanDbId(array $data): array
+    public function cleanDbId($data): array
     {
+        $data = get_object_vars($data);
         $data['id'] = (string) $data['_id'];
         unset($data['_id']);
         return $data;
+    }
+
+    public function cleanFields(array $data): array
+    {
+        return array_map(function ($item) {
+            if ($item instanceof BSONArray) {
+                return $item->getArrayCopy();
+            }
+
+            return $item;
+        }, $data);
+    }
+
+    public function clean($data): array
+    {
+        $data = $this->cleanDbId($data);
+
+        return $this->cleanFields($data);
     }
 
     public function hasId(BaseModel $entity): bool
@@ -110,7 +130,7 @@ class Orm
         $result = $this->findAsArray($entity, $query);
 
         if (count($result) > 0) {
-            return $this->cleanDbId(get_object_vars($result[0]));
+            return $this->clean($result[0]);
         }
 
         return [];
@@ -135,7 +155,7 @@ class Orm
 
         if (count($result) > 0) {
             foreach ($result as $item) {
-                $entity = $entityString::hydrate($this->cleanDbId(get_object_vars($item)));
+                $entity = $entityString::hydrate($this->clean($item));
 
                 $items[] = $entity;
             }

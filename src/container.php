@@ -28,4 +28,20 @@ $container['AdminController'] = function ($container) {
     );
 };
 
+$container['PostController'] = function ($container) {
+    return new Mongolium\Controllers\Post(
+        new Mongolium\Services\Post(
+            $container['Orm']
+        )
+    );
+};
+
+$container['PageController'] = function ($container) {
+    return new Mongolium\Controllers\Page(
+        new Mongolium\Services\Page(
+            $container['Orm']
+        )
+    );
+};
+
 return $container;
