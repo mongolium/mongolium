@@ -19,6 +19,8 @@ class PostTest extends TestCase
                 'tags' => ['foo', 'bar'],
                 'author_id' => '2b',
                 'creator_id' => '3c',
+                'publish' => true,
+                'publish_at' => '2018-03-13 13:40:02',
                 'created_at' => '2018-03-13 13:40:02',
                 'updated_at' => '2018-03-13 13:40:02'
             ]
@@ -39,6 +41,8 @@ class PostTest extends TestCase
                 'tags' => ['foo', 'bar'],
                 'author_id' => '2b',
                 'creator_id' => '3c',
+                'publish' => true,
+                'publish_at' => '2018-03-13 13:40:02',
                 'created_at' => '2018-03-13 13:40:02',
                 'updated_at' => '2018-03-13 13:40:02'
             ]
@@ -46,7 +50,7 @@ class PostTest extends TestCase
 
         $data = $post->extract();
 
-        $this->assertEquals(10, count($data));
+        $this->assertEquals(12, count($data));
         $this->assertTrue(isset($data['id']));
         $this->assertTrue(isset($data['title']));
         $this->assertTrue(isset($data['slug']));
@@ -55,6 +59,8 @@ class PostTest extends TestCase
         $this->assertTrue(isset($data['tags']));
         $this->assertTrue(isset($data['author_id']));
         $this->assertTrue(isset($data['creator_id']));
+        $this->assertTrue(isset($data['publish']));
+        $this->assertTrue(isset($data['publish_at']));
         $this->assertTrue(isset($data['created_at']));
         $this->assertTrue(isset($data['updated_at']));
     }

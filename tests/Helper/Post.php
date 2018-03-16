@@ -20,6 +20,8 @@ class Post
             'tags' => [$faker->word],
             'creator_id' => $faker->randomNumber(5) . $faker->word,
             'author_id' => $faker->randomNumber(5) . $faker->word,
+            'publish' => $faker->boolean,
+            'publish_at' => $faker->date() . ' ' . $faker->time(),
             'created_at' => $faker->date() . ' ' . $faker->time(),
             'updated_at' => $faker->date() . ' ' . $faker->time()
         ];

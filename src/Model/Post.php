@@ -21,6 +21,10 @@ class Post extends BaseModel
 
     protected $creatorId;
 
+    protected $publish;
+
+    protected $publishAt;
+
     protected $createdAt;
 
     protected $updatedAt;
@@ -38,6 +42,8 @@ class Post extends BaseModel
         array $tags,
         string $authorId,
         string $creatorId,
+        bool $publish,
+        string $publishAt,
         string $createdAt,
         string $updatedAt
     )
@@ -58,6 +64,10 @@ class Post extends BaseModel
 
         $this->creatorId = $creatorId;
 
+        $this->publish = $publish;
+
+        $this->publishAt = $publishAt;
+
         $this->createdAt = $createdAt;
 
         $this->updatedAt = $updatedAt;
@@ -74,6 +84,8 @@ class Post extends BaseModel
             $data['tags'],
             $data['author_id'],
             $data['creator_id'],
+            $data['publish'],
+            $data['publish_at'],
             $data['created_at'],
             $data['updated_at']
         );
@@ -90,6 +102,8 @@ class Post extends BaseModel
             'tags' => $this->tags,
             'author_id' => $this->authorId,
             'creator_id' => $this->creatorId,
+            'publish' => $this->publish,
+            'publish_at' => $this->publishAt,
             'created_at' => $this->createdAt,
             'updated_at' => $this->updatedAt
         ];

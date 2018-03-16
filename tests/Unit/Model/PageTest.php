@@ -18,6 +18,7 @@ class PageTest extends TestCase
                 'text' => 'this page has some information on it',
                 'tags' => ['foo', 'bar'],
                 'creator_id' => '3c',
+                'publish' => true,
                 'created_at' => '2018-03-13 13:40:02',
                 'updated_at' => '2018-03-13 13:40:02'
             ]
@@ -37,6 +38,7 @@ class PageTest extends TestCase
                 'text' => 'this page has some information on it',
                 'tags' => ['foo', 'bar'],
                 'creator_id' => '3c',
+                'publish' => true,
                 'created_at' => '2018-03-13 13:40:02',
                 'updated_at' => '2018-03-13 13:40:02'
             ]
@@ -44,7 +46,7 @@ class PageTest extends TestCase
 
         $data = $page->extract();
 
-        $this->assertEquals(9, count($data));
+        $this->assertEquals(10, count($data));
         $this->assertTrue(isset($data['id']));
         $this->assertTrue(isset($data['title']));
         $this->assertTrue(isset($data['slug']));
@@ -52,6 +54,7 @@ class PageTest extends TestCase
         $this->assertTrue(isset($data['text']));
         $this->assertTrue(isset($data['tags']));
         $this->assertTrue(isset($data['creator_id']));
+        $this->assertTrue(isset($data['publish']));
         $this->assertTrue(isset($data['created_at']));
         $this->assertTrue(isset($data['updated_at']));
     }

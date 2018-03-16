@@ -17,6 +17,7 @@ class Page
             'text' => $faker->lastName,
             'tags' => [$faker->word, $faker->word],
             'creator_id' => $faker->randomNumber(5) . $faker->word,
+            'publish' => $faker->boolean,
             'created_at' => $faker->date() . ' ' . $faker->time(),
             'updated_at' => $faker->date() . ' ' . $faker->time()
         ];

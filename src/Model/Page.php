@@ -19,6 +19,8 @@ class Page extends BaseModel
 
     protected $creatorId;
 
+    protected $publish;
+
     protected $createdAt;
 
     protected $updatedAt;
@@ -35,6 +37,7 @@ class Page extends BaseModel
         string $text,
         array $tags,
         string $creatorId,
+        bool $publish,
         string $createdAt,
         string $updatedAt
     )
@@ -53,6 +56,8 @@ class Page extends BaseModel
 
         $this->creatorId = $creatorId;
 
+        $this->publish = $publish;
+
         $this->createdAt = $createdAt;
 
         $this->updatedAt = $updatedAt;
@@ -68,6 +73,7 @@ class Page extends BaseModel
             $data['text'],
             $data['tags'],
             $data['creator_id'],
+            $data['publish'],
             $data['created_at'],
             $data['updated_at']
         );
@@ -83,6 +89,7 @@ class Page extends BaseModel
             'text' => $this->text,
             'tags' => $this->tags,
             'creator_id' => $this->creatorId,
+            'publish' => $this->publish,
             'created_at' => $this->createdAt,
             'updated_at' => $this->updatedAt
         ];
