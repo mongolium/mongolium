@@ -17,7 +17,7 @@ $app->group('', function () use ($app) {
     $app->post('/admins', 'AdminController:create')->add(Auth::class);
 
     $app->get('/posts', 'PostController:read');
-    $app->get('/posts/{id}', 'PostController:read');
+    $app->get('/posts/{id}', 'PostController:readOne');
     $app->post('/posts', 'PostController:create')->add(Auth::class);
 
     $app->get('/pages', 'PageController:read');

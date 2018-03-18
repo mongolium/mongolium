@@ -23,7 +23,7 @@ class Post
     public function read(Request $request, SlimResponse $response): SlimResponse
     {
         try {
-            $results = $this->post->read();
+            $results = $this->post->getPublished();
 
             $data = [];
 
@@ -39,7 +39,30 @@ class Post
                 ['self' => '/posts', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond401(
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/posts', 'token' => '/token']
+            );
+        }
+    }
+
+    public function readOne(Request $request, SlimResponse $response, array $args): SlimResponse
+    {
+        try {
+            $result = $this->post->getPost($args['id']);
+
+            $post = $result->extract();
+
+            return Response::make()->respond200(
+                $response,
+                $post['id'],
+                'post',
+                $post,
+                ['self' => '/posts/' . $post['id'], 'posts' => '/posts', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/posts', 'token' => '/token']

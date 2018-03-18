@@ -3,10 +3,11 @@
 namespace Tests\Helper;
 
 use Faker\Factory;
+use Carbon\Carbon;
 
 class Post
 {
-    public static function post(bool $withId = false): array
+    public static function post(bool $withId = false, bool $publish = true): array
     {
         $faker = Factory::create();
 
@@ -20,8 +21,8 @@ class Post
             'tags' => [$faker->word],
             'creator_id' => $faker->randomNumber(5) . $faker->word,
             'author_id' => $faker->randomNumber(5) . $faker->word,
-            'publish' => $faker->boolean,
-            'publish_at' => $faker->date() . ' ' . $faker->time(),
+            'publish' => $publish,
+            'publish_at' => $publish ? Carbon::now()->subMinute()->toDateTimeString() : Carbon::now()->addMinute()->toDateTimeString(),
             'created_at' => $faker->date() . ' ' . $faker->time(),
             'updated_at' => $faker->date() . ' ' . $faker->time()
         ];

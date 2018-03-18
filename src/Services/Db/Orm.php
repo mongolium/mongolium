@@ -122,7 +122,7 @@ class Orm
 
     public function findAsArray(string $entity, array $query = []): array
     {
-        return $this->collection($entity::getTable())->find($query)->toArray();
+        return $this->collection($entity::getTable())->find($this->buildId($query))->toArray();
     }
 
     public function findOneAsArray(string $entity, array $query = []): array
