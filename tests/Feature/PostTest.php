@@ -8,6 +8,10 @@ use Mongolium\Services\Db\Client;
 use Mongolium\Model\Post;
 use Tests\FeatureCase;
 use Carbon\Carbon;
+use ReallySimpleJWT\TokenBuilder;
+use ReallySimpleJWT\TokenValidator;
+use Mongolium\Services\Token;
+use Mockery as m;
 
 class PostTest extends FeatureCase
 {
@@ -80,6 +84,81 @@ class PostTest extends FeatureCase
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->data));
         $this->assertEquals($data['title'], $json->data->title);
+    }
+
+    public function testCreatePost()
+    {
+        $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
+
+        $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
+
+        $response = $this->request(
+            'POST',
+            '/posts',
+            ['form_params' =>
+                [
+                    'title' => 'This is a post',
+                    'description' => 'This is a sentence about the post',
+                    'text' => 'This is the text for the post',
+                    'tags' => ['post', 'blog'],
+                    'author_id' => '123bcdE',
+                    'creator_id' => '123bcdE',
+                    'publish' => false,
+                    'publish_at' => '2018-03-18 14:12:43'
+                ]
+            , 'headers' => ['Authorization' => 'Bearer ' . $jwt]]
+        );
+
+        $json = json_decode($response->getBody());
+
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+        $this->assertTrue(isset($json->data));
+        $this->assertEquals('This is a post', $json->data->title);
+        $this->assertEquals('this-is-a-post', $json->data->slug);
+    }
+
+    public function testUpdatePost()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $post = $orm->create(Post::class, PostHelper::post());
+
+        $post = $post->extract();
+
+        $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
+
+        $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
+
+        $response = $this->request(
+            'PATCH',
+            '/posts',
+            ['form_params' =>
+                [
+                    'id' => $post['id'],
+                    'title' => 'This is an updated post',
+                    'description' => 'This is a sentence about the post',
+                    'text' => 'This is the text for the post',
+                    'tags' => ['post', 'blog'],
+                    'author_id' => '123bcdE',
+                    'creator_id' => '123bcdE',
+                    'publish' => false,
+                    'publish_at' => '2018-03-18 14:12:43'
+                ]
+            , 'headers' => ['Authorization' => 'Bearer ' . $jwt]]
+        );
+
+        $json = json_decode($response->getBody());
+
+        //var_dump($json);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+        $this->assertTrue(isset($json->data));
+        $this->assertEquals('This is an updated post', $json->data->title);
+        $this->assertEquals('this-is-an-updated-post', $json->data->slug);
     }
 
     public function tearDown()

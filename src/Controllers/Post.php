@@ -69,4 +69,52 @@ class Post
             );
         }
     }
+
+    public function create(Request $request, SlimResponse $response): SlimResponse
+    {
+        try {
+            $result = $this->post->create($request->getParsedBody());
+
+            $post = $result->extract();
+            $post['link'] = '/posts/' . $post['id'];
+
+            return Response::make()->respond201(
+                $response,
+                $post['id'],
+                'post',
+                $post,
+                ['self' => '/posts', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/posts', 'token' => '/token']
+            );
+        }
+    }
+
+    public function update(Request $request, SlimResponse $response): SlimResponse
+    {
+        try {
+            $result = $this->post->update($request->getParsedBody());
+
+            $post = $result->extract();
+            $post['link'] = '/posts/' . $post['id'];
+
+            return Response::make()->respond200(
+                $response,
+                $post['id'],
+                'post',
+                $post,
+                ['self' => '/posts', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/posts', 'token' => '/token']
+            );
+        }
+    }
 }

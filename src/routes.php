@@ -19,6 +19,7 @@ $app->group('', function () use ($app) {
     $app->get('/posts', 'PostController:read');
     $app->get('/posts/{id}', 'PostController:readOne');
     $app->post('/posts', 'PostController:create')->add(Auth::class);
+    $app->patch('/posts', 'PostController:update')->add(Auth::class);
 
     $app->get('/pages', 'PageController:read');
     $app->get('/pages/{id}', 'PageController:read');
