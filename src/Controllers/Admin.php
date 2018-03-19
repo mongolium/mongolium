@@ -42,6 +42,30 @@ class Admin
         }
     }
 
+    public function update(Request $request, SlimResponse $response): SlimResponse
+    {
+        try {
+            $result = $this->admin->update($request->getParsedBody());
+
+            $admin = $result->extract();
+            $admin['link'] = '/admins/' . $admin['id'];
+
+            return Response::make()->respond200(
+                $response,
+                $admin['id'],
+                'admin',
+                $admin,
+                ['self' => '/admins', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/admins', 'token' => '/token']
+            );
+        }
+    }
+
     public function read(Request $request, SlimResponse $response): SlimResponse
     {
         try {
@@ -81,7 +105,7 @@ class Admin
                 $admin['id'],
                 'admin',
                 $admin,
-                ['self' => '/admins/' . $admi['id'], 'admins' => '/admins', 'token' => '/token']
+                ['self' => '/admins/' . $admin['id'], 'admins' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
             return Response::make()->respond400(

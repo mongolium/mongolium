@@ -24,6 +24,13 @@ class Admin
         return $this->orm->create(AdminModel::class, $data);
     }
 
+    public function update(array $data): AdminModel
+    {
+        $data['updated_at'] = Carbon::now()->toDateTimeString();
+
+        return $this->orm->update(AdminModel::class, ['id' => $data['id']], $data);
+    }
+
     public function all(): Collection
     {
         return $this->orm->all(AdminModel::class);
