@@ -151,8 +151,6 @@ class PostTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        //var_dump($json);
-
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));

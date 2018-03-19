@@ -24,8 +24,13 @@ class Admin
         return $this->orm->create(AdminModel::class, $data);
     }
 
-    public function read(): Collection
+    public function all(): Collection
     {
         return $this->orm->all(AdminModel::class);
+    }
+
+    public function getAdmin(string $id): AdminModel
+    {
+        return $this->orm->find(AdminModel::class, ['id' => $id]);
     }
 }

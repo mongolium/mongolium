@@ -45,7 +45,7 @@ class Admin
     public function read(Request $request, SlimResponse $response): SlimResponse
     {
         try {
-            $results = $this->admin->read($request->getParsedBody());
+            $results = $this->admin->all($request->getParsedBody());
 
             $data = [];
 
@@ -62,6 +62,29 @@ class Admin
             );
         } catch (Throwable $e) {
             return Response::make()->respond401(
+                $response,
+                $e->getMessage(),
+                ['self' => '/admins', 'token' => '/token']
+            );
+        }
+    }
+
+    public function readOne(Request $request, SlimResponse $response, array $args): SlimResponse
+    {
+        try {
+            $result = $this->admin->getAdmin($args['id']);
+
+            $admin = $result->hide();
+
+            return Response::make()->respond200(
+                $response,
+                $admin['id'],
+                'admin',
+                $admin,
+                ['self' => '/admins/' . $admi['id'], 'admins' => '/admins', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/admins', 'token' => '/token']

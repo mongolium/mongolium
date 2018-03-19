@@ -13,7 +13,7 @@ $app->group('', function () use ($app) {
     $app->patch('/token', 'TokenController:update')->add(Auth::class);
 
     $app->get('/admins', 'AdminController:read')->add(Auth::class);
-    $app->get('/admins/{id}', 'AdminController:read')->add(Auth::class);
+    $app->get('/admins/{id}', 'AdminController:readOne')->add(Auth::class);
     $app->post('/admins', 'AdminController:create')->add(Auth::class);
 
     $app->get('/posts', 'PostController:read');
@@ -22,8 +22,9 @@ $app->group('', function () use ($app) {
     $app->patch('/posts', 'PostController:update')->add(Auth::class);
 
     $app->get('/pages', 'PageController:read');
-    $app->get('/pages/{id}', 'PageController:read');
+    $app->get('/pages/{id}', 'PageController:readOne');
     $app->post('/pages', 'PageController:create')->add(Auth::class);
+    $app->patch('/pages', 'PageController:update')->add(Auth::class);
 })->add(Basic::class);
 
 return $app;

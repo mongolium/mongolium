@@ -43,7 +43,7 @@ class AdminTest extends FeatureCase
         $this->assertEquals('admin', $json->type);
     }
 
-    public function testGetAllAdmins()
+    public function testGetAdmins()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
 
@@ -67,6 +67,34 @@ class AdminTest extends FeatureCase
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertEquals(2, count($json->data));
+    }
+
+    public function testGetAdmin()
+    {
+        $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
+
+        $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
+
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $admin = $orm->create(Admin::class, AdminHelper::admin());
+
+        $data = $admin->extract();
+
+        $response = $this->request(
+            'GET',
+            '/admins/' . $data['id'],
+            ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
+        );
+
+        $json = json_decode($response->getBody());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue(isset($json->id));
+        $this->assertTrue(isset($json->links));
+        $this->assertTrue(isset($json->data));
+        $this->assertEquals($data['id'], $json->data->id);
+        $this->assertEquals($data['first_name'], $json->data->first_name);
     }
 
     public function tearDown()

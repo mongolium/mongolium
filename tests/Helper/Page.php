@@ -6,7 +6,7 @@ use Faker\Factory;
 
 class Page
 {
-    public static function page(bool $withId = false): array
+    public static function page(bool $withId = false, bool $publish = true): array
     {
         $faker = Factory::create();
 
@@ -17,7 +17,7 @@ class Page
             'text' => $faker->lastName,
             'tags' => [$faker->word, $faker->word],
             'creator_id' => $faker->randomNumber(5) . $faker->word,
-            'publish' => $faker->boolean,
+            'publish' => $publish,
             'created_at' => $faker->date() . ' ' . $faker->time(),
             'updated_at' => $faker->date() . ' ' . $faker->time()
         ];

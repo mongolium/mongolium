@@ -23,7 +23,7 @@ class Page
     public function read(Request $request, SlimResponse $response): SlimResponse
     {
         try {
-            $results = $this->page->read();
+            $results = $this->page->getPublished();
 
             $data = [];
 
@@ -42,7 +42,78 @@ class Page
             return Response::make()->respond401(
                 $response,
                 $e->getMessage(),
-                ['self' => '/posts', 'token' => '/token']
+                ['self' => '/pages', 'token' => '/token']
+            );
+        }
+    }
+
+    public function readOne(Request $request, SlimResponse $response, array $args): SlimResponse
+    {
+        try {
+            $result = $this->page->getPage($args['id']);
+
+            $page = $result->extract();
+
+            return Response::make()->respond200(
+                $response,
+                $page['id'],
+                'page',
+                $page,
+                ['self' => '/pages/' . $page['id'], 'pages' => '/pages', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/page', 'token' => '/token']
+            );
+        }
+    }
+
+    public function create(Request $request, SlimResponse $response): SlimResponse
+    {
+        try {
+            $result = $this->page->create($request->getParsedBody());
+
+            $page = $result->extract();
+            $page['link'] = '/pages/' . $page['id'];
+
+            return Response::make()->respond201(
+                $response,
+                $page['id'],
+                'page',
+                $page,
+                ['self' => '/pages', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/pages', 'token' => '/token']
+            );
+        }
+    }
+
+    public function update(Request $request, SlimResponse $response): SlimResponse
+    {
+        try {
+            $result = $this->page->update($request->getParsedBody());
+
+            $page = $result->extract();
+            $page['link'] = '/pages/' . $page['id'];
+
+            return Response::make()->respond200(
+                $response,
+                $page['id'],
+                'page',
+                $page,
+                ['self' => '/pages', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/pages', 'token' => '/token']
             );
         }
     }
