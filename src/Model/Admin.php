@@ -39,8 +39,7 @@ class Admin extends BaseModel
         string $type,
         string $createdAt,
         string $updatedAt
-    )
-    {
+    ) {
         $this->id = $id;
 
         $this->username = $username;

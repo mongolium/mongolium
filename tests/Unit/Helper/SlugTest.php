@@ -21,5 +21,4 @@ class SlugTest extends TestCase
             $this->makeSlug('This $ Is # a Title & Something ! * Else £ And $ Some"thi\'ng ^ Else')
         );
     }
-
 }
