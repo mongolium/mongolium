@@ -29,5 +29,4 @@ class SlugTest extends TestCase
             $this->makeSlug('this-is-a-title')
         );
     }
-
 }
