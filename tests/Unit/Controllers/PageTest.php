@@ -24,7 +24,7 @@ class PageTest extends TestCase
 
     public function testGetPage()
     {
-        $page = PageHelper::Page(true);
+        $page = PageHelper::page(true);
 
         $pageService = m::mock(PageService::class);
         $pageService->shouldReceive('getPage')->once()->andReturn(
