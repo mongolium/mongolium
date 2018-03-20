@@ -19,12 +19,12 @@ class PageTest extends TestCase
 
         $page = new Page($pageService);
 
-        $this->assertInstanceOf(page::class, $page);
+        $this->assertInstanceOf(Page::class, $page);
     }
 
     public function testGetPage()
     {
-        $page = pageHelper::Page(true);
+        $page = PageHelper::Page(true);
 
         $pageService = m::mock(PageService::class);
         $pageService->shouldReceive('getPage')->once()->andReturn(
