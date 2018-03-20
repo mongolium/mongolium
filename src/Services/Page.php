@@ -45,4 +45,9 @@ class Page
 
         return $this->orm->update(PageModel::class, ['id' => $data['id']], $data);
     }
+
+    public function delete(string $id): bool
+    {
+        return $this->orm->delete(PageModel::class, ['id' => $id]);
+    }
 }

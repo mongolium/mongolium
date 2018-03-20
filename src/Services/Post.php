@@ -54,4 +54,9 @@ class Post
 
         return $this->orm->update(PostModel::class, ['id' => $data['id']], $data);
     }
+
+    public function delete(string $id): bool
+    {
+        return $this->orm->delete(PostModel::class, ['id' => $id]);
+    }
 }

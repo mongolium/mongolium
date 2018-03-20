@@ -136,6 +136,39 @@ class AdminTest extends FeatureCase
         $this->assertEquals($data['first_name'], $json->data->first_name);
     }
 
+    public function testAdminDelete()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $admin = $orm->create(Admin::class, AdminHelper::admin());
+        $orm->create(Admin::class, AdminHelper::admin());
+
+        $collection = $orm->all(Admin::class);
+
+        $this->assertSame(2, $collection->count());
+
+        $admin = $admin->extract();
+
+        $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
+
+        $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
+
+        $response = $this->request(
+            'delete',
+            '/admins/' . $admin['id'],
+            ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
+        );
+
+        $json = json_decode($response->getBody());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Admin deleted.', $json->data->message);
+
+        $collection = $orm->all(Admin::class);
+
+        $this->assertSame(1, $collection->count());
+    }
+
     public function tearDown()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));

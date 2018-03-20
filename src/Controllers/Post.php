@@ -117,4 +117,25 @@ class Post
             );
         }
     }
+
+    public function delete(Request $request, SlimResponse $response, array $args): SlimResponse
+    {
+        try {
+            $this->post->delete($args['id']);
+
+            return Response::make()->respond200(
+                $response,
+                $this->uniqueId(),
+                'post',
+                ['message' => 'Post deleted.'],
+                ['posts' => '/posts', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/posts', 'token' => '/token']
+            );
+        }
+    }
 }

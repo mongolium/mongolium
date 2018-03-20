@@ -159,6 +159,39 @@ class PostTest extends FeatureCase
         $this->assertEquals('this-is-an-updated-post', $json->data->slug);
     }
 
+    public function testPostDelete()
+    {
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+
+        $post = $orm->create(Post::class, PostHelper::post());
+        $orm->create(Post::class, PostHelper::post());
+
+        $collection = $orm->all(Post::class);
+
+        $this->assertSame(2, $collection->count());
+
+        $post = $post->extract();
+
+        $token = new Token(new TokenBuilder, new TokenValidator, m::mock(Orm::class));
+
+        $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
+
+        $response = $this->request(
+            'delete',
+            '/posts/' . $post['id'],
+            ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
+        );
+
+        $json = json_decode($response->getBody());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Post deleted.', $json->data->message);
+
+        $collection = $orm->all(Post::class);
+
+        $this->assertSame(1, $collection->count());
+    }
+
     public function tearDown()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));

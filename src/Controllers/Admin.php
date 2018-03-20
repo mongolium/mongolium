@@ -115,4 +115,25 @@ class Admin
             );
         }
     }
+
+    public function delete(Request $request, SlimResponse $response, array $args): SlimResponse
+    {
+        try {
+            $this->admin->delete($args['id']);
+
+            return Response::make()->respond200(
+                $response,
+                $this->uniqueId(),
+                'admin',
+                ['message' => 'Admin deleted.'],
+                ['admins' => '/admins', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/admins', 'token' => '/token']
+            );
+        }
+    }
 }

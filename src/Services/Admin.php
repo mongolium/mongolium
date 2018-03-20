@@ -40,4 +40,9 @@ class Admin
     {
         return $this->orm->find(AdminModel::class, ['id' => $id]);
     }
+
+    public function delete(string $id): bool
+    {
+        return $this->orm->delete(AdminModel::class, ['id' => $id]);
+    }
 }

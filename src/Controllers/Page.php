@@ -117,4 +117,25 @@ class Page
             );
         }
     }
+
+    public function delete(Request $request, SlimResponse $response, array $args): SlimResponse
+    {
+        try {
+            $this->page->delete($args['id']);
+
+            return Response::make()->respond200(
+                $response,
+                $this->uniqueId(),
+                'page',
+                ['message' => 'Page deleted.'],
+                ['pages' => '/pages', 'token' => '/token']
+            );
+        } catch (Throwable $e) {
+            return Response::make()->respond400(
+                $response,
+                $e->getMessage(),
+                ['self' => '/page', 'token' => '/token']
+            );
+        }
+    }
 }
