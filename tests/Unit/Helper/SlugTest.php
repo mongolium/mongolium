@@ -22,4 +22,12 @@ class SlugTest extends TestCase
         );
     }
 
+    public function testOkTitle()
+    {
+        $this->assertEquals(
+            'this-is-a-title',
+            $this->makeSlug('this-is-a-title')
+        );
+    }
+
 }

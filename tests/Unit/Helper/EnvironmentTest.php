@@ -15,4 +15,13 @@ class EnvironmentTest extends TestCase
 
         $this->assertEquals('bar', $this->env('FOO'));
     }
+
+    /**
+     * @expectedException Mongolium\Exceptions\EnvironmentException
+     * @expectedExceptionMessage The environment variable CAR could not be found
+     */
+    public function testNoEnvVariable()
+    {
+        $this->env('CAR');
+    }
 }

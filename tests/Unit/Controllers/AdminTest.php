@@ -49,7 +49,6 @@ class AdminTest extends TestCase
 
         $this->assertRegExp('|"id":"' . $admin['id'] . '"|', $data);
         $this->assertRegExp('|"username":"' . $admin['username'] . '"|', $data);
-        //$this->assertRegExp('|"password":"' . $admin['password'] . '"|', $data);
         $this->assertRegExp('|"type":"' . $admin['type'] . '"|', $data);
     }
 }
