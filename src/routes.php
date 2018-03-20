@@ -1,8 +1,8 @@
 <?php
 
-use Mongolium\Middleware\Auth;
-use Mongolium\Middleware\Password;
-use Mongolium\Middleware\Basic;
+use Mongolium\Core\Middleware\Auth;
+use Mongolium\Core\Middleware\Password;
+use Mongolium\Core\Middleware\Basic;
 
 $container  = require __DIR__ . '/../src/container.php';
 
