@@ -61,8 +61,9 @@ class AdminTest extends FeatureCase
             '/admins',
             ['form_params' =>
                 [
-                    'username' => 'rob',
-                    'password' => 'hello',
+                    'id' => $admin['id'],
+                    'username' => 'updaterob',
+                    'password' => 'updatehello',
                     'first_name' => 'rob',
                     'last_name' => 'smith',
                     'email' => 'rob@test.com',
@@ -77,8 +78,8 @@ class AdminTest extends FeatureCase
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->data));
-        $this->assertEquals('rob', $json->data->username);
-        $this->assertEquals('hello', $json->data->password);
+        $this->assertEquals('updaterob', $json->data->username);
+        $this->assertEquals('updatehello', $json->data->password);
     }
 
     public function testGetAdmins()
