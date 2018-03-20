@@ -31,7 +31,7 @@ abstract class BaseModel implements Hydrator
 
     public function hide(): array
     {
-        return array_filter($this->extract(), function($key) {
+        return array_filter($this->extract(), function ($key) {
             return !in_array($key, $this->hide);
         }, ARRAY_FILTER_USE_KEY);
     }

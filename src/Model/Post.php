@@ -46,8 +46,7 @@ class Post extends BaseModel
         string $publishAt,
         string $createdAt,
         string $updatedAt
-    )
-    {
+    ) {
         $this->id = $id;
 
         $this->title = $title;

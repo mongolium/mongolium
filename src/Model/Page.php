@@ -40,8 +40,7 @@ class Page extends BaseModel
         bool $publish,
         string $createdAt,
         string $updatedAt
-    )
-    {
+    ) {
         $this->id = $id;
 
         $this->title = $title;
