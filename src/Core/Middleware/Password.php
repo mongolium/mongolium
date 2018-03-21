@@ -14,7 +14,7 @@ class Password
     public function __invoke(Request $request, SlimResponse $response, $next): SlimResponse
     {
         if (empty($request->getAttribute('basic_auth'))) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 'Please supply a username and password with your request',
                 ['token' => '/token']
@@ -24,7 +24,7 @@ class Password
         $userPassword = $this->decode($request->getAttribute('basic_auth'));
 
         if (count($userPassword) === 0 || empty($userPassword['username']) || empty($userPassword['password'])) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 'Please supply a valid username and password with your request',
                 ['token' => '/token']

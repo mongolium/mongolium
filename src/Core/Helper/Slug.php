@@ -7,15 +7,7 @@ trait Slug
     public function makeSlug(string $title): string
     {
         $slug = str_replace('--', '-',
-            str_replace(
-                ' ',
-                '-',
-                str_replace(
-                    ['!', '£', '$', '%', '^', '&', '*', '@', '+', '=', '#', '?', ',', '.', '>', '<', '~', '"', '|', '/', '\''],
-                    '',
-                    strtolower($title)
-                )
-            )
+            preg_replace('|[^a-z0-9\-]|', '', str_replace(' ', '-', strtolower($title)))
         );
 
         if (preg_match('|--|', $slug)) {

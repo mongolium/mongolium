@@ -26,7 +26,7 @@ class Admin
         try {
             $result = $this->admin->create($request->getParsedBody());
 
-            return Response::make()->respond201(
+            return Response::respond201(
                 $response,
                 $this->uniqueId(),
                 'admin',
@@ -34,7 +34,7 @@ class Admin
                 ['self' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond401(
+            return Response::respond401(
                 $response,
                 $e->getMessage(),
                 ['self' => '/admins', 'token' => '/token']
@@ -50,7 +50,7 @@ class Admin
             $admin = $result->extract();
             $admin['link'] = '/admins/' . $admin['id'];
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $admin['id'],
                 'admin',
@@ -58,7 +58,7 @@ class Admin
                 ['self' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/admins', 'token' => '/token']
@@ -77,7 +77,7 @@ class Admin
                 $data[] = $row->hide();
             }
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $this->uniqueId(),
                 'admin',
@@ -85,7 +85,7 @@ class Admin
                 ['self' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond401(
+            return Response::respond401(
                 $response,
                 $e->getMessage(),
                 ['self' => '/admins', 'token' => '/token']
@@ -100,7 +100,7 @@ class Admin
 
             $admin = $result->hide();
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $admin['id'],
                 'admin',
@@ -108,7 +108,7 @@ class Admin
                 ['self' => '/admins/' . $admin['id'], 'admins' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/admins', 'token' => '/token']
@@ -121,7 +121,7 @@ class Admin
         try {
             $this->admin->delete($args['id']);
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $this->uniqueId(),
                 'admin',
@@ -129,7 +129,7 @@ class Admin
                 ['admins' => '/admins', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/admins', 'token' => '/token']

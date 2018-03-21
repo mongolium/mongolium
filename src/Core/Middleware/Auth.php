@@ -17,7 +17,7 @@ class Auth
     {
         try {
             if (empty($request->getAttribute('bearer_token'))) {
-                return Response::make()->respond400(
+                return Response::respond400(
                     $response,
                     'Please provide an authentication token',
                     ['token' => '/token']
@@ -26,7 +26,7 @@ class Auth
 
             Token::validate($request->getAttribute('bearer_token'), getenv('TOKEN_SECRET'));
         } catch (Throwable $e) {
-            return Response::make()->respond401(
+            return Response::respond401(
                 $response,
                 'Please provide a valid authentication token',
                 ['token' => '/token']

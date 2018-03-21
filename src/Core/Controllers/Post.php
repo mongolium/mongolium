@@ -31,7 +31,7 @@ class Post
                 $data[] = $row->extract();
             }
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $this->uniqueId(),
                 'post',
@@ -39,7 +39,7 @@ class Post
                 ['self' => '/posts', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/posts', 'token' => '/token']
@@ -54,7 +54,7 @@ class Post
 
             $post = $result->extract();
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $post['id'],
                 'post',
@@ -62,7 +62,7 @@ class Post
                 ['self' => '/posts/' . $post['id'], 'posts' => '/posts', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/posts', 'token' => '/token']
@@ -78,7 +78,7 @@ class Post
             $post = $result->extract();
             $post['link'] = '/posts/' . $post['id'];
 
-            return Response::make()->respond201(
+            return Response::respond201(
                 $response,
                 $post['id'],
                 'post',
@@ -86,7 +86,7 @@ class Post
                 ['self' => '/posts', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/posts', 'token' => '/token']
@@ -102,7 +102,7 @@ class Post
             $post = $result->extract();
             $post['link'] = '/posts/' . $post['id'];
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $post['id'],
                 'post',
@@ -110,7 +110,7 @@ class Post
                 ['self' => '/posts', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/posts', 'token' => '/token']
@@ -123,7 +123,7 @@ class Post
         try {
             $this->post->delete($args['id']);
 
-            return Response::make()->respond200(
+            return Response::respond200(
                 $response,
                 $this->uniqueId(),
                 'post',
@@ -131,7 +131,7 @@ class Post
                 ['posts' => '/posts', 'token' => '/token']
             );
         } catch (Throwable $e) {
-            return Response::make()->respond400(
+            return Response::respond400(
                 $response,
                 $e->getMessage(),
                 ['self' => '/posts', 'token' => '/token']

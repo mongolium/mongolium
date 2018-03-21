@@ -35,14 +35,14 @@ class Token
                 $this->env('TOKEN_ISSUER')
             );
         } catch (Throwable $e) {
-            return Response::make()->respond401(
+            return Response::respond401(
                 $response,
                 $e->getMessage(),
                 ['self' => '/token']
             );
         }
 
-        return Response::make()->respond201(
+        return Response::respond201(
                 $response,
                 $token,
                 'token',
@@ -53,7 +53,7 @@ class Token
 
     public function update($request, $response)
     {
-        return Response::make()->respond200(
+        return Response::respond200(
             $response,
             $this->token->renewToken(
                 $request->getAttribute('bearer_token'),
