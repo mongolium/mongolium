@@ -22,7 +22,7 @@ class PostTest extends FeatureCase
         $orm->create(Post::class, PostHelper::post());
         $orm->create(Post::class, PostHelper::post());
 
-        $response = $this->request('GET', '/posts');
+        $response = $this->request('GET', '/api/posts');
 
         $json = json_decode($response->getBody());
 
@@ -40,7 +40,7 @@ class PostTest extends FeatureCase
         $orm->create(Post::class, PostHelper::post(false, false));
         $orm->create(Post::class, PostHelper::post(false, false));
 
-        $response = $this->request('GET', '/posts');
+        $response = $this->request('GET', '/api/posts');
 
         $json = json_decode($response->getBody());
 
@@ -59,7 +59,7 @@ class PostTest extends FeatureCase
         $orm->create(Post::class, PostHelper::post());
         $orm->create(Post::class, PostHelper::post(false, false));
 
-        $response = $this->request('GET', '/posts');
+        $response = $this->request('GET', '/api/posts');
 
         $json = json_decode($response->getBody());
 
@@ -75,7 +75,7 @@ class PostTest extends FeatureCase
 
         $data = $post->extract();
 
-        $response = $this->request('GET', '/posts/' . $data['id']);
+        $response = $this->request('GET', '/api/posts/' . $data['id']);
 
         $json = json_decode($response->getBody());
 
@@ -94,7 +94,7 @@ class PostTest extends FeatureCase
 
         $response = $this->request(
             'POST',
-            '/posts',
+            '/api/posts',
             ['form_params' =>
                 [
                     'title' => 'This is a post',
@@ -133,7 +133,7 @@ class PostTest extends FeatureCase
 
         $response = $this->request(
             'PATCH',
-            '/posts',
+            '/api/posts',
             ['form_params' =>
                 [
                     'id' => $post['id'],
@@ -178,7 +178,7 @@ class PostTest extends FeatureCase
 
         $response = $this->request(
             'delete',
-            '/posts/' . $post['id'],
+            '/api/posts/' . $post['id'],
             ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );
 

@@ -23,7 +23,7 @@ class PageTest extends FeatureCase
         $orm->create(Page::class, PageHelper::page());
         $orm->create(Page::class, PageHelper::page());
 
-        $response = $this->request('GET', '/pages');
+        $response = $this->request('GET', '/api/pages');
 
         $json = json_decode($response->getBody());
 
@@ -41,7 +41,7 @@ class PageTest extends FeatureCase
         $orm->create(Page::class, PageHelper::page(false, false));
         $orm->create(Page::class, PageHelper::page());
 
-        $response = $this->request('GET', '/pages');
+        $response = $this->request('GET', '/api/pages');
 
         $json = json_decode($response->getBody());
 
@@ -57,7 +57,7 @@ class PageTest extends FeatureCase
 
         $data = $page->extract();
 
-        $response = $this->request('GET', '/pages/' . $data['id']);
+        $response = $this->request('GET', '/api/pages/' . $data['id']);
 
         $json = json_decode($response->getBody());
 
@@ -76,7 +76,7 @@ class PageTest extends FeatureCase
 
         $response = $this->request(
             'POST',
-            '/pages',
+            '/api/pages',
             ['form_params' =>
                 [
                     'title' => 'This is a page',
@@ -113,7 +113,7 @@ class PageTest extends FeatureCase
 
         $response = $this->request(
             'PATCH',
-            '/pages',
+            '/api/pages',
             ['form_params' =>
                 [
                     'id' => $page['id'],
@@ -157,7 +157,7 @@ class PageTest extends FeatureCase
 
         $response = $this->request(
             'delete',
-            '/pages/' . $page['id'],
+            '/api/pages/' . $page['id'],
             ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );
 

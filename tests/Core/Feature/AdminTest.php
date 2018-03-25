@@ -22,7 +22,7 @@ class AdminTest extends FeatureCase
 
         $response = $this->request(
             'POST',
-            '/admins',
+            '/api/admins',
             ['form_params' =>
                 [
                     'username' => 'rob',
@@ -58,7 +58,7 @@ class AdminTest extends FeatureCase
 
         $response = $this->request(
             'PATCH',
-            '/admins',
+            '/api/admins',
             ['form_params' =>
                 [
                     'id' => $admin['id'],
@@ -96,7 +96,7 @@ class AdminTest extends FeatureCase
 
         $response = $this->request(
             'GET',
-            '/admins',
+            '/api/admins',
             ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );
 
@@ -122,7 +122,7 @@ class AdminTest extends FeatureCase
 
         $response = $this->request(
             'GET',
-            '/admins/' . $data['id'],
+            '/api/admins/' . $data['id'],
             ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );
 
@@ -155,7 +155,7 @@ class AdminTest extends FeatureCase
 
         $response = $this->request(
             'delete',
-            '/admins/' . $admin['id'],
+            '/api/admins/' . $admin['id'],
             ['headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );
 

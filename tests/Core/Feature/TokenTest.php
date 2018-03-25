@@ -32,7 +32,7 @@ class TokenTest extends FeatureCase
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
         $result = $orm->create(Admin::class, $admin);
 
-        $response = $this->request('POST', '/token', ['headers' => ['Authorization' => 'Basic ' . $this->encode($admin['username'], $admin['password'])]]);
+        $response = $this->request('POST', '/api/token', ['headers' => ['Authorization' => 'Basic ' . $this->encode($admin['username'], $admin['password'])]]);
 
         $json = json_decode($response->getBody());
 
@@ -44,7 +44,7 @@ class TokenTest extends FeatureCase
 
     public function testGetTokenNoUsernamePassword()
     {
-        $response = $this->request('POST', '/token');
+        $response = $this->request('POST', '/api/token');
 
         $json = json_decode($response->getBody());
 
@@ -61,7 +61,7 @@ class TokenTest extends FeatureCase
 
     public function testGetTokenBadUsernamePasswordString()
     {
-        $response = $this->request('POST', '/token', ['headers' => ['Authorization' => 'Basic 123']]);
+        $response = $this->request('POST', '/api/token', ['headers' => ['Authorization' => 'Basic 123']]);
 
         $json = json_decode($response->getBody());
 
@@ -82,7 +82,7 @@ class TokenTest extends FeatureCase
 
         $jwt = $token->makeToken('1123', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
 
-        $response = $this->request('PATCH', '/token', ['headers' => ['Authorization' => 'Bearer ' . $jwt]]);
+        $response = $this->request('PATCH', '/api/token', ['headers' => ['Authorization' => 'Bearer ' . $jwt]]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -95,7 +95,7 @@ class TokenTest extends FeatureCase
 
     public function testUpdateTokenNoToken()
     {
-        $response = $this->request('PATCH', '/token');
+        $response = $this->request('PATCH', '/api/token');
 
         $this->assertEquals(400, $response->getStatusCode());
 
@@ -110,7 +110,7 @@ class TokenTest extends FeatureCase
 
     public function testUpdateTokenBadToken()
     {
-        $response = $this->request('PATCH', '/token', ['headers' => ['Authorization' => 'Bearer 123']]);
+        $response = $this->request('PATCH', '/api/token', ['headers' => ['Authorization' => 'Bearer 123']]);
 
         $this->assertEquals(401, $response->getStatusCode());
 

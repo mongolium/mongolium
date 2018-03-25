@@ -46,14 +46,14 @@ DELETE http://localhost/api/pages/{id} // Delete individual page [authentication
 
 All API authentication requires you to use the authorization header which is processed by middleware placed on the relevant routes.
 
-- **Basic:** send a base65 encoded username and password separated by a colon via the basic authorisation protocol. This type of authentication is only used to generate a new JWT token.
-- **Bearer:** send a JSON Web Token as a bearer token in the authorization header.
+- **Basic:** send a base65 encoded username and password separated by a colon via the basic authorisation protocol. This type of authentication is only used to generate a new JWT token. eg: `Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==`
+- **Bearer:** send a JSON Web Token as a bearer token in the authorization header. eg: `Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.XbPfbIHMI6arZ3Y922BhjWgQzWXcXNrz0ogtVhfEd2o`
 
 ## Extension  
 
 Mongolium is setup to provide some basic CMS functionality out of the box. It is also open to extension and development in any way you see fit.
 
-It is advised that rather than editing the core files you place your extensions along with your new controllers, services and models in the `src/App` directory. 
+It is advised that rather than editing the core files you place your extensions along with your new controllers, services and models in the `src/App` directory.
 
 ## Author
 

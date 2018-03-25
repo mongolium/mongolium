@@ -8,7 +8,7 @@ $container  = require __DIR__ . '/../src/container.php';
 
 $app = new Slim\App($container);
 
-$app->group('', function () use ($app) {
+$app->group('/api', function () use ($app) {
     $app->post('/token', 'TokenController:create')->add(Password::class);
     $app->patch('/token', 'TokenController:update')->add(Auth::class);
 
