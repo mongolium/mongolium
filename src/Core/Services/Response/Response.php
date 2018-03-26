@@ -11,9 +11,16 @@ class Response
 {
     use Id;
 
+    private static function getInstance()
+    {
+        return new Response();
+    }
+
     public static function respond200(SlimResponse $response, string $id, string $type, array $data, array $links): SlimResponse
     {
-        $transformer = static::makeTransformer(
+        $instance = static::getInstance();
+
+        $transformer = $instance->makeTransformer(
             200,
             'OK',
             $id,
@@ -22,12 +29,14 @@ class Response
             $links
         );
 
-        return static::respond($response, $transformer, 200);
+        return $instance->respond($response, $transformer, 200);
     }
 
     public static function respond201(SlimResponse $response, string $id, string $type, array $data, array $links): SlimResponse
     {
-        $transformer = static::makeTransformer(
+        $instance = static::getInstance();
+
+        $transformer = $instance->makeTransformer(
             201,
             'CREATED',
             $id,
@@ -36,49 +45,55 @@ class Response
             $links
         );
 
-        return static::respond($response, $transformer, 201);
+        return $instance->respond($response, $transformer, 201);
     }
 
     public static function respond400(SlimResponse $response, string $message, array $links): SlimResponse
     {
-        $transformer = static::makeTransformer(
+        $instance = static::getInstance();
+
+        $transformer = $instance->makeTransformer(
             400,
             'Bad Request: ' . $message,
-            static::uniqueId(),
+            $instance->uniqueId(),
             'error',
             [],
             $links
         );
 
-        return static::respond($response, $transformer, 400);
+        return $instance->respond($response, $transformer, 400);
     }
 
     public static function respond401(SlimResponse $response, string $message, array $links): SlimResponse
     {
-        $transformer = static::makeTransformer(
+        $instance = static::getInstance();
+
+        $transformer = $instance->makeTransformer(
             401,
             'Unauthorized: ' . $message,
-            static::uniqueId(),
+            $instance->uniqueId(),
             'error',
             [],
             $links
         );
 
-        return static::respond($response, $transformer, 401);
+        return $instance->respond($response, $transformer, 401);
     }
 
     public static function respond404(SlimResponse $response, string $message, array $links): SlimResponse
     {
-        $transformer = static::makeTransformer(
+        $instance = static::getInstance();
+
+        $transformer = $instance->makeTransformer(
             404,
             'NOT FOUND: ' . $message,
-            static::uniqueId(),
+            $instance->uniqueId(),
             'error',
             [],
             $links
         );
 
-        return static::respond($response, $transformer, 404);
+        return $instance->respond($response, $transformer, 404);
     }
 
     public function makeJson(int $code, string $message, string $id, string $type, array $data, array $links): Json
@@ -89,7 +104,7 @@ class Response
     public function makeTransformer(int $code, string $message, string $id, string $type, array $data, array $links): Transformer
     {
         return new Transformer(
-            static::makeJson($code, $message, $id, $type, $data, $links)
+            $this->makeJson($code, $message, $id, $type, $data, $links)
         );
     }
 
