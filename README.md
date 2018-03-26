@@ -4,7 +4,30 @@
 
 A PHP and MongoDB based CMS for developers that delivers data via APIs and services only.
 
+## Notes
+
+This is an alpha project currently, it can be tested but must not be used in production environment.
+
+## System Requirements
+
+- PHP >= 7.0
+- MongoDB = 3.0
+
 ## Installation
+
+To install Mongolium using composer:
+
+```
+// For now just use dev-master while this project is in alpha
+
+composer create-project --prefer-dist mongolium/mongolium test dev-master
+```
+
+Once installed run the Mongolium helper script, this will add an admin to the database so you can start using the API. It will output a username and password.
+
+```
+php mongolium
+```
 
 ## Overview
 
@@ -51,9 +74,7 @@ All API authentication requires you to use the authorization header which is pro
 
 ## Extension  
 
-Mongolium is setup to provide some basic CMS functionality out of the box. It is also open to extension and development in any way you see fit.
-
-It is advised that rather than editing the core files you place your extensions along with your new controllers, services and models in the `src/App` directory.
+Mongolium is setup to provide some basic CMS functionality out of the box. It is also open to extension and development in any way you see fit. It is advised that rather than editing the core files you place your extensions along with your new controllers, services and models in the `src/App` directory.
 
 ## Author
 
