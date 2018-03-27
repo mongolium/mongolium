@@ -39,8 +39,8 @@ before_script:
 
 script:
     - vendor/bin/phpstan analyse -l 7 -c phpstan.neon tests src public
-    - vendor/bin/phpunit --coverage-clover=coverage.xml tests/Unit
-    - vendor/bin/phpunit tests/Feature
+    - vendor/bin/phpunit --coverage-clover=coverage.xml tests/Core/Unit
+    - vendor/bin/phpunit tests/Core/Feature
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)

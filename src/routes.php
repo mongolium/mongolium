@@ -1,14 +1,14 @@
 <?php
 
-use Mongolium\Middleware\Auth;
-use Mongolium\Middleware\Password;
-use Mongolium\Middleware\Basic;
+use Mongolium\Core\Middleware\Auth;
+use Mongolium\Core\Middleware\Password;
+use Mongolium\Core\Middleware\Basic;
 
 $container  = require __DIR__ . '/../src/container.php';
 
 $app = new Slim\App($container);
 
-$app->group('', function () use ($app) {
+$app->group('/api', function () use ($app) {
     $app->post('/token', 'TokenController:create')->add(Password::class);
     $app->patch('/token', 'TokenController:update')->add(Auth::class);
 

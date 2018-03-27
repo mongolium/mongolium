@@ -5,14 +5,14 @@ $config = require __DIR__ . '/../src/config.php';
 $container = new \Slim\Container($config);
 
 $container['Orm'] = function ($container) {
-    return new Mongolium\Services\Db\Orm(
-        Mongolium\Services\Db\Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'))
+    return new Mongolium\Core\Services\Db\Orm(
+        Mongolium\Core\Services\Db\Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'))
     );
 };
 
 $container['TokenController'] = function ($container) {
-    return new Mongolium\Controllers\Token(
-        new Mongolium\Services\Token(
+    return new Mongolium\Core\Controllers\Token(
+        new Mongolium\Core\Services\Token(
             new ReallySimpleJWT\TokenBuilder,
             new ReallySimpleJWT\TokenValidator,
             $container['Orm']
@@ -21,24 +21,24 @@ $container['TokenController'] = function ($container) {
 };
 
 $container['AdminController'] = function ($container) {
-    return new Mongolium\Controllers\Admin(
-        new Mongolium\Services\Admin(
+    return new Mongolium\Core\Controllers\Admin(
+        new Mongolium\Core\Services\Admin(
             $container['Orm']
         )
     );
 };
 
 $container['PostController'] = function ($container) {
-    return new Mongolium\Controllers\Post(
-        new Mongolium\Services\Post(
+    return new Mongolium\Core\Controllers\Post(
+        new Mongolium\Core\Services\Post(
             $container['Orm']
         )
     );
 };
 
 $container['PageController'] = function ($container) {
-    return new Mongolium\Controllers\Page(
-        new Mongolium\Services\Page(
+    return new Mongolium\Core\Controllers\Page(
+        new Mongolium\Core\Services\Page(
             $container['Orm']
         )
     );
