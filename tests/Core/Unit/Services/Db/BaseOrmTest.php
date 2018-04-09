@@ -187,6 +187,34 @@ class BaseOrmTest extends TestCase
         $this->assertTrue(in_array('firstName', $data));
     }
 
+    public function testGetDataKeysDoubleDash()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $data = $baseOrm->getDataKeys([
+            'firstName' => 'josh',
+            'last__name' => 'smith'
+        ]);
+
+        $this->assertFalse(in_array('last_name', $data));
+        $this->assertTrue(in_array('lastName', $data));
+        $this->assertTrue(in_array('firstName', $data));
+    }
+
+    public function testGetDataKeysMultiDash()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $data = $baseOrm->getDataKeys([
+            'firstName' => 'josh',
+            'last_name_again_and_again' => 'smith'
+        ]);
+
+        $this->assertFalse(in_array('last_name', $data));
+        $this->assertTrue(in_array('lastNameAgainAndAgain', $data));
+        $this->assertTrue(in_array('firstName', $data));
+    }
+
     public function testKeyPartsToKey()
     {
         $baseOrm = m::mock(BaseOrm::class)->makePartial();
@@ -195,6 +223,33 @@ class BaseOrmTest extends TestCase
             'my',
             'first',
             'name'
+        ]);
+
+        $this->assertEquals('myFirstName', $string);
+    }
+
+    public function testKeyPartsToKeyOddData()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $string = $baseOrm->keyPartsToKey([
+            'My',
+            'first',
+            'Name'
+        ]);
+
+        $this->assertEquals('myFirstName', $string);
+    }
+
+    public function testKeyPartsToKeyOddDataTwo()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $string = $baseOrm->keyPartsToKey([
+            'My',
+            'first',
+            '',
+            'Name'
         ]);
 
         $this->assertEquals('myFirstName', $string);
