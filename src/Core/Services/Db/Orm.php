@@ -94,7 +94,7 @@ class Orm extends BaseOrm
     public function create(string $entityString, array $data): BaseModel
     {
         try {
-            $entity = $entityString::hydrate($this->unsetEntityId($data));
+            $entity = $entityString::hydrate($this->emptyEntityId($data));
 
             if (!$this->hasId($entity) && !$this->exists($entity)) {
                 $result = $this->insertOne($entity);
@@ -121,7 +121,7 @@ class Orm extends BaseOrm
      */
     public function update(string $entity, array $query, array $data): BaseModel
     {
-        $this->validateData($entity, $data);
+        $this->entityHasData($entity, $data);
 
         try {
             $collection = $this->client->getCollection($entity::getTable());
@@ -151,7 +151,7 @@ class Orm extends BaseOrm
      */
     public function updateMany(string $entity, array $query, array $data): Collection
     {
-        $this->validateData($entity, $data);
+        $this->entityHasData($entity, $data);
 
         try {
             $collection = $this->client->getCollection($entity::getTable());

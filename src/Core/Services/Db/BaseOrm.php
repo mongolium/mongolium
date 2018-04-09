@@ -48,12 +48,12 @@ class BaseOrm
     }
 
     /**
-     * Unsets an entity id if it is not required. For example on an insert.
+     * Emptys an entity id if it is not required. For example on an insert.
      *
      * @param array $data
      * @return array
      */
-    public function unsetEntityId(array $data): array
+    public function emptyEntityId(array $data): array
     {
         $data['id'] = '';
         return $data;
@@ -144,24 +144,57 @@ class BaseOrm
     }
 
     /**
-     * Compare the data to be passed into the entity with what the entity
-     * accepts this is a final layer of validation to protect the
-     * document structure.
+     * Transform key parts from snake case to came case.
+     *
+     * @param array $keys
+     * @return string
+     */
+    public function keyPartsToKey(array $keys): string
+    {
+        return array_reduce($keys, function ($carry, $key) {
+            $carry .= ucfirst($key);
+            return lcfirst($carry);
+        }, '');
+    }
+
+    /**
+     * Get the keys held in the data array but so they match the camel case
+     * formatting of the entity constructor rather than the snake case of the
+     * entity extractor.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getDataKeys(array $data): array
+    {
+        return array_reduce(array_keys($data), function ($carry, $key) use ($data) {
+            if (strpos($key, '_') !== false) {
+                $carry[] = $this->keyPartsToKey(explode('_', $key));
+                return $carry;
+            }
+
+            $carry[] = $key;
+            return $carry;
+        }, []);
+    }
+
+    /**
+     * Check the entity has the data fields that are to be updated.
      *
      * @param string $entity
      * @param array $data
      * @return bool
      */
-    public function validateData(string $entity, array $data): bool
+    public function entityHasData(string $entity, array $data): bool
     {
         $entityKeys = $this->getEntityProperties($entity);
-        $dataKeys = array_keys($data);
+        $dataKeys = $this->getDataKeys($data);
 
         $filter = array_filter($entityKeys, function ($key) use ($dataKeys) {
             return in_array($key, $dataKeys);
         });
 
-        if (count($filter) >= 1) {
+        if (count($filter) === count($data)) {
             return true;
         }
 
