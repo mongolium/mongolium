@@ -167,7 +167,7 @@ class BaseOrm
      */
     public function getDataKeys(array $data): array
     {
-        return array_reduce(array_keys($data), function ($carry, $key) use ($data) {
+        return array_reduce(array_keys($data), function ($carry, $key) {
             if (strpos($key, '_') !== false) {
                 $carry[] = $this->keyPartsToKey(explode('_', $key));
                 return $carry;
