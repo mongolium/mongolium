@@ -298,9 +298,11 @@ class BaseOrmTest extends TestCase
     {
         $baseOrm = m::mock(BaseOrm::class)->makePartial();
 
-        $data['id'] = '5ac18d1100000132000abc00';
-        $data['name'] = 'Rob';
-        $data['age'] = 20;
+        $data = [
+            'id' => '5ac18d1100000132000abc00',
+            'name' => 'Rob',
+            'age' => 20
+        ];
 
         $result = $baseOrm->makeObjectId($data);
 
@@ -318,8 +320,10 @@ class BaseOrmTest extends TestCase
     {
         $baseOrm = m::mock(BaseOrm::class)->makePartial();
 
-        $data['name'] = 'Rob';
-        $data['age'] = 20;
+        $data = [
+            'name' => 'Rob',
+            'age' => 20
+        ];
 
         $document = new \MongoDB\Model\BSONDocument;
         $document->bsonUnserialize($data);
