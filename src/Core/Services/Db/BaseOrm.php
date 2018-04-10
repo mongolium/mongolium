@@ -68,9 +68,13 @@ class BaseOrm
      */
     public function makeEntityId(BSONDocument $data): array
     {
-        $data = get_object_vars($data);
-        $data['id'] = (string) $data['_id'];
-        unset($data['_id']);
+        $data = $data->getArrayCopy();
+
+        if (isset($data['_id'])) {
+            $data['id'] = $data['_id']->__toString();
+            unset($data['_id']);
+        }
+        
         return $data;
     }
 
@@ -85,7 +89,7 @@ class BaseOrm
     {
         return array_map(function ($item) {
             if ($item instanceof BSONArray) {
-                return $item->getArrayCopy();
+                return $item->bsonSerialize();
             }
 
             return $item;

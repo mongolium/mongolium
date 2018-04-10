@@ -254,6 +254,81 @@ class BaseOrmTest extends TestCase
 
         $this->assertEquals('myFirstName', $string);
     }
+
+    public function testMakeEntityArray()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $data = [
+            'car',
+            'park',
+            ['foo', 'bar']
+        ];
+
+        $result = $baseOrm->makeEntityArray($data);
+
+        $this->assertEquals('car', $result[0]);
+        $this->assertEquals('park', $result[1]);
+        $this->assertEquals('foo', $result[2][0]);
+        $this->assertEquals('bar', $result[2][1]);
+    }
+
+    public function testMakeEntityArrayWithBSON()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $bsonArray = new \MongoDB\Model\BSONArray;
+        $bsonArray->bsonUnserialize(['foo', 'bar']);
+
+        $data = [
+            'car',
+            'park',
+            $bsonArray
+        ];
+
+        $result = $baseOrm->makeEntityArray($data);
+
+        $this->assertEquals('car', $result[0]);
+        $this->assertEquals('park', $result[1]);
+        $this->assertEquals('foo', $result[2][0]);
+        $this->assertEquals('bar', $result[2][1]);
+    }
+
+    public function testMakeEntityId()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $data['id'] = '5ac18d1100000132000abc00';
+        $data['name'] = 'Rob';
+        $data['age'] = 20;
+
+        $result = $baseOrm->makeObjectId($data);
+
+        $document = new \MongoDB\Model\BSONDocument;
+        $document->bsonUnserialize($result);
+
+        $array = $baseOrm->makeEntityId($document);
+
+        $this->assertEquals('5ac18d1100000132000abc00', $array['id']);
+        $this->assertEquals('Rob', $array['name']);
+        $this->assertEquals(20, $array['age']);
+    }
+
+    public function testMakeEntityNoId()
+    {
+        $baseOrm = m::mock(BaseOrm::class)->makePartial();
+
+        $data['name'] = 'Rob';
+        $data['age'] = 20;
+
+        $document = new \MongoDB\Model\BSONDocument;
+        $document->bsonUnserialize($data);
+
+        $array = $baseOrm->makeEntityId($document);
+
+        $this->assertEquals('Rob', $array['name']);
+        $this->assertEquals(20, $array['age']);
+    }
 }
 
 class TestModel extends BaseModel
