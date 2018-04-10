@@ -39,6 +39,7 @@ before_script:
 
 script:
     - vendor/bin/phpstan analyse -l 7 -c phpstan.neon tests src public
+    - vendor/bin/phpmd src text ruleset.xml
     - vendor/bin/phpunit --coverage-clover=coverage.xml tests/Core/Unit
     - vendor/bin/phpunit tests/Core/Feature
 

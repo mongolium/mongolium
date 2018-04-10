@@ -6,136 +6,34 @@ use Mongolium\Core\Services\Db\Client;
 use Mongolium\Core\Services\Db\Hydratpr;
 use Mongolium\Core\Exceptions\OrmException;
 use Mongolium\Core\Services\Db\BaseModel;
-use MongoDB\InsertOneResult;
-use MongoDB\BSON\ObjectId;
+use Mongolium\Core\Services\Db\BaseOrm;
 use ReallySimple\Collection;
-use ReflectionClass;
 use Error;
-use MongoDB\Model\BSONArray;
 
-class Orm
+/**
+ * ORM interface providing logical database methods to return data and hydrate
+ * entity models.
+ *
+ * @author Rob Waller <rdwaller1984@googlemail.com>
+ */
+class Orm extends BaseOrm
 {
-    protected $client;
-
+    /**
+     * Inject mongo client
+     *
+     * @param Client $client
+     */
     public function __construct(Client $client)
     {
-        $this->client = $client;
+        parent::__construct($client);
     }
 
-    public function collection(string $table)
-    {
-        return $this->client->getConnection()->{$this->client->getDatabase()}->{$table};
-    }
-
-    public function exists(BaseModel $entity): bool
-    {
-        $unique = $entity->getUnique();
-
-        $filter = array_filter($entity->extract(), function ($key) use ($unique) {
-            return in_array($key, $unique);
-        }, ARRAY_FILTER_USE_KEY);
-
-        return $this->count(get_class($entity), ['$or' => [$filter]]) >= 1;
-    }
-
-    public function buildId(array $data): array
-    {
-        if (isset($data['id'])) {
-            $data['_id'] = new ObjectId($data['id']);
-            unset($data['id']);
-        }
-
-        return $data;
-    }
-
-    public function cleanId(array $data): array
-    {
-        $data['id'] = '';
-        return $data;
-    }
-
-    public function cleanDbId($data): array
-    {
-        $data = get_object_vars($data);
-        $data['id'] = (string) $data['_id'];
-        unset($data['_id']);
-        return $data;
-    }
-
-    public function cleanFields(array $data): array
-    {
-        return array_map(function ($item) {
-            if ($item instanceof BSONArray) {
-                return $item->getArrayCopy();
-            }
-
-            return $item;
-        }, $data);
-    }
-
-    public function clean($data): array
-    {
-        $data = $this->cleanDbId($data);
-
-        return $this->cleanFields($data);
-    }
-
-    public function hasId(BaseModel $entity): bool
-    {
-        $data = $entity->extract();
-
-        return !empty($data['id']);
-    }
-
-    public function getEntityProperties(string $entity): array
-    {
-        $reflector = new ReflectionClass($entity);
-
-        $parameters = $reflector->getMethod('__construct')->getParameters();
-
-        if (count($parameters) >= 1) {
-            $keys = [];
-
-            foreach ($parameters as $param) {
-                $keys[] = $param->getName();
-            }
-
-            return $keys;
-        }
-
-        throw new OrmException('Invalid Model ' . $entity . ' constructor has no parameters.');
-    }
-
-    public function validateData(string $entity, array $data)
-    {
-        $entityKeys = $this->getEntityProperties($entity);
-        $dataKeys = array_keys($data);
-
-        $filter = array_filter($entityKeys, function ($key) use ($dataKeys) {
-            return in_array($key, $dataKeys);
-        });
-
-        if (count($filter) === 0) {
-            throw new OrmException('Data ' . print_r($data, true) . ' not valid for model ' . $entity);
-        }
-    }
-
-    public function findAsArray(string $entity, array $query = []): array
-    {
-        return $this->collection($entity::getTable())->find($this->buildId($query))->toArray();
-    }
-
-    public function findOneAsArray(string $entity, array $query = []): array
-    {
-        $result = $this->findAsArray($entity, $query);
-
-        if (count($result) > 0) {
-            return $this->clean($result[0]);
-        }
-
-        return [];
-    }
-
+    /**
+     * Find a mongo document, hydrate and return entity model
+     *
+     * @param string $entity
+     * @param array $query
+     */
     public function find(string $entity, array $query): BaseModel
     {
         $result = $this->findOneAsArray($entity, $query);
@@ -147,6 +45,13 @@ class Orm
         throw new OrmException('No ' . $entity . ' record found to match this query ' . print_r($query, true) . '.');
     }
 
+    /**
+     * Find multiple mongo documents and return a collection of entity models
+     *
+     * @param string $entityString
+     * @param array $query
+     * @return Collection
+     */
     public function all(string $entityString, array $query = []): Collection
     {
         $result = $this->findAsArray($entityString, $query);
@@ -155,7 +60,7 @@ class Orm
 
         if (count($result) > 0) {
             foreach ($result as $item) {
-                $entity = $entityString::hydrate($this->clean($item));
+                $entity = $entityString::hydrate($this->mongoToEntity($item));
 
                 $items[] = $entity;
             }
@@ -166,29 +71,33 @@ class Orm
         throw new OrmException('No ' . $entityString . ' record found to match this query ' . print_r($query, true) . '.');
     }
 
+    /**
+     * Count the number of mongo documents that exist within a collection based
+     * a defined query.
+     *
+     * @param string $entity
+     * @param array $query
+     * @return int
+     */
     public function count(string $entity, array $query): int
     {
-        return $this->collection($entity::getTable())->count($query);
+        return $this->client->getCollection($entity::getTable())->count($query);
     }
 
-    public function insertEntity(BaseModel $entity): InsertOneResult
-    {
-        $collection = $this->collection($entity::getTable());
-
-        $data = $entity->extract();
-
-        unset($data['id']);
-
-        return $collection->insertOne($data);
-    }
-
+    /**
+     * Create a mongo document based on an entity model
+     *
+     * @param string $entityString
+     * @param array $data
+     * @return BaseModel
+     */
     public function create(string $entityString, array $data): BaseModel
     {
         try {
-            $entity = $entityString::hydrate($this->cleanId($data));
+            $entity = $entityString::hydrate($this->emptyEntityId($data));
 
             if (!$this->hasId($entity) && !$this->exists($entity)) {
-                $result = $this->insertEntity($entity);
+                $result = $this->insertOne($entity);
 
                 $entity->setId($result->getInsertedId());
 
@@ -201,19 +110,28 @@ class Orm
         throw new OrmException('Cannot duplicate this ' . get_class($entity) . ' record, already exists.');
     }
 
+    /**
+     * Update an existing mongo document based on a defined query and return an
+     * entity model
+     *
+     * @param string $entity
+     * @param array $query
+     * @param array $data
+     * @return BaseModel
+     */
     public function update(string $entity, array $query, array $data): BaseModel
     {
-        $this->validateData($entity, $data);
+        $this->entityHasData($entity, $data);
 
         try {
-            $collection = $this->collection($entity::getTable());
+            $collection = $this->client->getCollection($entity::getTable());
 
-            $data = ['$set' => $this->buildId($data)];
+            $data = ['$set' => $this->makeObjectId($data)];
 
-            $result = $collection->updateOne($this->buildId($query), $data);
+            $result = $collection->updateOne($this->makeObjectId($query), $data);
 
             if ($result) {
-                return $this->find($entity, $this->buildId($query));
+                return $this->find($entity, $this->makeObjectId($query));
             }
         } catch (Error $e) {
             throw new OrmException('Could not update ' . $entity . ' model: ' . $e->getMessage());
@@ -222,19 +140,28 @@ class Orm
         throw new OrmException('Could not update ' . $entity . ' model');
     }
 
-    public function updateMany(string $entity, array $query, array $data)
+    /**
+     * Update multipe existing mongo document based on a defined query and
+     * return a collection of entity models
+     *
+     * @param string $entity
+     * @param array $query
+     * @param array $data
+     * @return Collection
+     */
+    public function updateMany(string $entity, array $query, array $data): Collection
     {
-        $this->validateData($entity, $data);
+        $this->entityHasData($entity, $data);
 
         try {
-            $collection = $this->collection($entity::getTable());
+            $collection = $this->client->getCollection($entity::getTable());
 
-            $set = ['$set' => $this->buildId($data)];
+            $set = ['$set' => $this->makeObjectId($data)];
 
-            $result = $collection->updateMany($this->buildId($query), $set);
+            $result = $collection->updateMany($this->makeObjectId($query), $set);
 
             if ($result) {
-                return $this->all($entity, $this->buildId($data));
+                return $this->all($entity, $this->makeObjectId($data));
             }
         } catch (Error $e) {
             throw new OrmException('Could not update ' . $entity . ' model: ' . $e->getMessage());
@@ -243,12 +170,37 @@ class Orm
         throw new OrmException('Could not update ' . $entity . ' model');
     }
 
+    /**
+     * Check to see if a Mongo document exists based on the unique property set
+     * on the entity model.
+     *
+     * @param BaseModel $entity
+     * @return bool
+     */
+    public function exists(BaseModel $entity): bool
+    {
+        $unique = $entity->getUnique();
+
+        $filter = array_filter($entity->extract(), function ($key) use ($unique) {
+            return in_array($key, $unique);
+        }, ARRAY_FILTER_USE_KEY);
+
+        return $this->count(get_class($entity), ['$or' => [$filter]]) >= 1;
+    }
+
+    /**
+     * Delete a mongo document based on a query
+     *
+     * @param string $entity
+     * @param array $query
+     * @return bool
+     */
     public function delete(string $entity, array $query): bool
     {
         try {
-            $collection = $this->collection($entity::getTable());
+            $collection = $this->client->getCollection($entity::getTable());
 
-            $collection->deleteOne($this->buildId($query));
+            $collection->deleteOne($this->makeObjectId($query));
 
             return true;
         } catch (Error $e) {
@@ -258,9 +210,15 @@ class Orm
         return false;
     }
 
+    /**
+     * Drop a mongo collection from the database. A dangerous method...
+     *
+     * @param string $entity
+     * @return bool
+     */
     public function drop(string $entity): bool
     {
-        $result = $this->collection($entity::getTable())->drop();
+        $result = $this->client->getCollection($entity::getTable())->drop();
 
         return is_array($result) && isset($result['ok']) && $result['ok'] === 1;
     }

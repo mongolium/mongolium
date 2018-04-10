@@ -122,8 +122,7 @@ class PageTest extends FeatureCase
                     'text' => 'This is the text for the page',
                     'tags' => ['page', 'home'],
                     'creator_id' => '123bcdE',
-                    'publish' => false,
-                    'publish_at' => '2018-03-18 14:12:43'
+                    'publish' => false
                 ]
             , 'headers' => ['Authorization' => 'Bearer ' . $jwt]]
         );

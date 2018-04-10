@@ -31,7 +31,7 @@ class OrmTest extends TestCase
         $orm = m::mock(Orm::class)->makePartial();
         $orm->shouldReceive('hasId')->once()->andReturn(false);
         $orm->shouldReceive('exists')->once()->andReturn(false);
-        $orm->shouldReceive('insertEntity')->once()->andReturn(
+        $orm->shouldReceive('insertOne')->once()->andReturn(
             $result
         );
 
@@ -51,7 +51,7 @@ class OrmTest extends TestCase
         $orm = m::mock(Orm::class)->makePartial();
         $orm->shouldReceive('hasId')->once()->andReturn(false);
         $orm->shouldReceive('exists')->once()->andReturn(false);
-        $orm->shouldReceive('insertEntity')->once()->andReturn(
+        $orm->shouldReceive('insertOne')->once()->andReturn(
             $result
         );
 
