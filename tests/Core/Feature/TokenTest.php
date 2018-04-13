@@ -21,7 +21,7 @@ class TokenTest extends FeatureCase
     {
         parent::setUp();
 
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->drop(Admin::class);
     }
@@ -29,7 +29,7 @@ class TokenTest extends FeatureCase
     public function testGetToken()
     {
         $admin = AdminHelper::admin();
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
         $result = $orm->create(Admin::class, $admin);
 
         $response = $this->request('POST', '/api/token', ['headers' => ['Authorization' => 'Basic ' . $this->encode($admin['username'], $admin['password'])]]);
@@ -125,7 +125,7 @@ class TokenTest extends FeatureCase
 
     public function tearDown()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->drop(Admin::class);
     }

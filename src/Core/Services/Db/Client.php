@@ -34,9 +34,13 @@ final class Client
      * @param string $port
      * @param string $database
      */
-    private function __construct(string $host, string $port, string $database)
+    private function __construct(string $host, string $port, string $database, string $username, string $password)
     {
-        $this->connection = new MongoClient('mongodb://' . $host . ':' . $port);
+        if (!empty($username) && !empty($password)) {
+            $this->connection = new MongoClient('mongodb://' . $host . ':' . $port, ['username' => $username, 'password' => $password]);
+        } else {
+            $this->connection = new MongoClient('mongodb://' . $host . ':' . $port);
+        }
 
         $this->database = $database;
     }
@@ -50,10 +54,10 @@ final class Client
      * @param string $database
      * @return Client
      */
-    public static function getInstance(string $host, string $port, string $database): Client
+    public static function getInstance(string $host, string $port, string $database, string $username, string $password): Client
     {
         if (null === static::$instance) {
-            static::$instance = new static($host, $port, $database);
+            static::$instance = new static($host, $port, $database, $username, $password);
         }
         return static::$instance;
     }

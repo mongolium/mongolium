@@ -17,7 +17,7 @@ class OrmTest extends FeatureCase
     {
         parent::setUp();
 
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->drop(Admin::class);
         $orm->drop(Post::class);
@@ -25,7 +25,7 @@ class OrmTest extends FeatureCase
 
     public function testCreate()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin = AdminHelper::admin();
 
@@ -43,7 +43,7 @@ class OrmTest extends FeatureCase
 
     public function testFind()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin = AdminHelper::admin();
 
@@ -63,7 +63,7 @@ class OrmTest extends FeatureCase
 
     public function testCount()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin = AdminHelper::admin();
 
@@ -74,7 +74,7 @@ class OrmTest extends FeatureCase
 
     public function testCountMultiple()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin1 = AdminHelper::admin();
         $admin1['type'] = 'admin';
@@ -90,14 +90,14 @@ class OrmTest extends FeatureCase
 
     public function testCountZero()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $this->assertEquals(0, $orm->count(Admin::class, ['username' => 'rob']));
     }
 
     public function testUpdate()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $result = $orm->create(Admin::class, AdminHelper::admin());
 
@@ -121,7 +121,7 @@ class OrmTest extends FeatureCase
      */
     public function testUpdateBadData()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $result = $orm->create(Admin::class, AdminHelper::admin());
 
@@ -136,7 +136,7 @@ class OrmTest extends FeatureCase
 
     public function testUpdateMany()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin1 = AdminHelper::admin();
         $admin1['type'] = 'admin';
@@ -173,7 +173,7 @@ class OrmTest extends FeatureCase
      */
     public function testUpdateManyBadData()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Admin::class, AdminHelper::admin());
 
@@ -188,7 +188,7 @@ class OrmTest extends FeatureCase
 
     public function testAll()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Admin::class, AdminHelper::admin());
 
@@ -205,7 +205,7 @@ class OrmTest extends FeatureCase
 
     public function testAllWithQuery()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin1 = AdminHelper::admin();
         $admin1['type'] = 'editor';
@@ -229,7 +229,7 @@ class OrmTest extends FeatureCase
 
     public function testAllPost()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Post::class, PostHelper::post());
 
@@ -246,7 +246,7 @@ class OrmTest extends FeatureCase
 
     public function testDelete()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Admin::class, AdminHelper::admin());
 
@@ -266,7 +266,7 @@ class OrmTest extends FeatureCase
 
     public function tearDown()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->drop(Admin::class);
         $orm->drop(Post::class);
