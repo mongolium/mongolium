@@ -38,7 +38,9 @@
     },
     "scripts": {
         "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "rm -rf tests/Core",
+            "rm .codecov.yml .styleci.yml .travis.yml phpstan.neon ruleset.xml"
         ]
     }
 }
