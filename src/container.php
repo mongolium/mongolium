@@ -6,7 +6,13 @@ $container = new \Slim\Container($config);
 
 $container['Orm'] = function ($container) {
     return new Mongolium\Core\Services\Db\Orm(
-        Mongolium\Core\Services\Db\Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'))
+        Mongolium\Core\Services\Db\Client::getInstance(
+            getenv('MONGO_HOST'),
+            getenv('MONGO_PORT'),
+            getenv('MONGO_DATABASE'),
+            getenv('MONGO_USERNAME'),
+            getenv('MONGO_PASSWORD')
+        )
     );
 };
 

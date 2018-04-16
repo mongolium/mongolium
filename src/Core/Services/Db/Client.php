@@ -33,12 +33,32 @@ final class Client
      * @param string $host
      * @param string $port
      * @param string $database
+     * @param string $username
+     * @param string $password
      */
-    private function __construct(string $host, string $port, string $database)
+    private function __construct(string $host, string $port, string $database, string $username, string $password)
     {
-        $this->connection = new MongoClient('mongodb://' . $host . ':' . $port);
+        $this->connection = $this->makeConnection($host, $port, $database, $username, $password);
 
         $this->database = $database;
+    }
+
+    /**
+     * Make the Mongo Client connection based on whether you need authentication or not.
+     *
+     * @param string $host
+     * @param string $port
+     * @param string $database
+     * @param string $username
+     * @param string $password
+     */
+    private function makeConnection(string $host, string $port, string $database, string $username, string $password)
+    {
+        if (!empty($username) && !empty($password)) {
+            return new MongoClient('mongodb://' . $host . ':' . $port, ['username' => $username, 'password' => $password]);
+        }
+
+        return new MongoClient('mongodb://' . $host . ':' . $port);
     }
 
     /**
@@ -50,10 +70,10 @@ final class Client
      * @param string $database
      * @return Client
      */
-    public static function getInstance(string $host, string $port, string $database): Client
+    public static function getInstance(string $host, string $port, string $database, string $username, string $password): Client
     {
         if (null === static::$instance) {
-            static::$instance = new static($host, $port, $database);
+            static::$instance = new static($host, $port, $database, $username, $password);
         }
         return static::$instance;
     }

@@ -16,7 +16,7 @@ class PageTest extends FeatureCase
 {
     public function testGetPages()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Page::class, PageHelper::page());
         $orm->create(Page::class, PageHelper::page());
@@ -35,7 +35,7 @@ class PageTest extends FeatureCase
 
     public function testGetPagesPublished()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Page::class, PageHelper::page());
         $orm->create(Page::class, PageHelper::page(false, false));
@@ -51,7 +51,7 @@ class PageTest extends FeatureCase
 
     public function testGetPage()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $page = $orm->create(Page::class, PageHelper::page());
 
@@ -101,7 +101,7 @@ class PageTest extends FeatureCase
 
     public function testUpdatePage()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $page = $orm->create(Page::class, PageHelper::page());
 
@@ -139,7 +139,7 @@ class PageTest extends FeatureCase
 
     public function testPageDelete()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $page = $orm->create(Page::class, PageHelper::page());
         $orm->create(Page::class, PageHelper::page());
@@ -172,7 +172,7 @@ class PageTest extends FeatureCase
 
     public function tearDown()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->drop(Page::class);
     }

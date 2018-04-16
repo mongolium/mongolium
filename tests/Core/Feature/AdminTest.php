@@ -46,7 +46,7 @@ class AdminTest extends FeatureCase
 
     public function testUpdateAdmin()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin = $orm->create(Admin::class, AdminHelper::admin());
 
@@ -84,7 +84,7 @@ class AdminTest extends FeatureCase
 
     public function testGetAdmins()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Admin::class, AdminHelper::admin());
 
@@ -114,7 +114,7 @@ class AdminTest extends FeatureCase
 
         $jwt = $token->makeToken('1abc4', 'admin', getenv('TOKEN_SECRET'), 10, 'test');
 
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin = $orm->create(Admin::class, AdminHelper::admin());
 
@@ -138,7 +138,7 @@ class AdminTest extends FeatureCase
 
     public function testAdminDelete()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $admin = $orm->create(Admin::class, AdminHelper::admin());
         $orm->create(Admin::class, AdminHelper::admin());
@@ -171,7 +171,7 @@ class AdminTest extends FeatureCase
 
     public function tearDown()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->drop(Admin::class);
     }

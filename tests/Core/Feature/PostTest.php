@@ -17,7 +17,7 @@ class PostTest extends FeatureCase
 {
     public function testGetPosts()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Post::class, PostHelper::post());
         $orm->create(Post::class, PostHelper::post());
@@ -34,7 +34,7 @@ class PostTest extends FeatureCase
 
     public function testGetPostsPublished()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->create(Post::class, PostHelper::post());
         $orm->create(Post::class, PostHelper::post(false, false));
@@ -50,7 +50,7 @@ class PostTest extends FeatureCase
 
     public function testGetPostsPublishedWithFutureDate()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $post = PostHelper::post();
         $post['publish_at'] = Carbon::now()->addMinute()->toDateTimeString();
@@ -69,7 +69,7 @@ class PostTest extends FeatureCase
 
     public function testGetPost()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $post = $orm->create(Post::class, PostHelper::post());
 
@@ -121,7 +121,7 @@ class PostTest extends FeatureCase
 
     public function testUpdatePost()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $post = $orm->create(Post::class, PostHelper::post());
 
@@ -161,7 +161,7 @@ class PostTest extends FeatureCase
 
     public function testPostDelete()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $post = $orm->create(Post::class, PostHelper::post());
         $orm->create(Post::class, PostHelper::post());
@@ -194,7 +194,7 @@ class PostTest extends FeatureCase
 
     public function tearDown()
     {
-        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE')));
+        $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
         $orm->drop(Post::class);
     }
