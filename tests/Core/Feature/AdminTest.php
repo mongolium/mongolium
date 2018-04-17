@@ -37,10 +37,10 @@ class AdminTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertSame(201, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
-        $this->assertEquals('admin', $json->type);
+        $this->assertSame('admin', $json->type);
     }
 
 
@@ -74,12 +74,12 @@ class AdminTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->data));
-        $this->assertEquals('updaterob', $json->data->username);
-        $this->assertEquals('updatehello', $json->data->password);
+        $this->assertSame('updaterob', $json->data->username);
+        $this->assertSame('updatehello', $json->data->password);
     }
 
     public function testGetAdmins()
@@ -102,10 +102,10 @@ class AdminTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
-        $this->assertEquals(2, count($json->data));
+        $this->assertSame(2, count($json->data));
     }
 
     public function testGetAdmin()
@@ -128,12 +128,12 @@ class AdminTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->data));
-        $this->assertEquals($data['id'], $json->data->id);
-        $this->assertEquals($data['first_name'], $json->data->first_name);
+        $this->assertSame($data['id'], $json->data->id);
+        $this->assertSame($data['first_name'], $json->data->first_name);
     }
 
     public function testAdminDelete()
@@ -161,8 +161,8 @@ class AdminTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Admin deleted.', $json->data->message);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('Admin deleted.', $json->data->message);
 
         $collection = $orm->all(Admin::class);
 

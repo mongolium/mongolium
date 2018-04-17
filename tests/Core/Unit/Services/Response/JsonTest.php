@@ -18,12 +18,12 @@ class JsonTest extends TestCase
     {
         $json = new Json(404, 'Not Found', '123', 'error', [], ['token' => '/token']);
 
-        $this->assertEquals(404, $json->getCode());
-        $this->assertEquals('Not Found', $json->getMessage());
-        $this->assertEquals('123', $json->getId());
-        $this->assertEquals('error', $json->getType());
-        $this->assertEquals([], $json->getData());
-        $this->assertEquals('/token', $json->getLinks()['token']);
+        $this->assertSame(404, $json->getCode());
+        $this->assertSame('Not Found', $json->getMessage());
+        $this->assertSame('123', $json->getId());
+        $this->assertSame('error', $json->getType());
+        $this->assertSame([], $json->getData());
+        $this->assertSame('/token', $json->getLinks()['token']);
     }
 
     public function testJsonSuccess()

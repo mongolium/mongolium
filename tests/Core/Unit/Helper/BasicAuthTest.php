@@ -15,8 +15,8 @@ class BasicAuthTest extends TestCase
 
         $result = $this->decode($userPassword);
 
-        $this->assertEquals('hello', $result['username']);
-        $this->assertEquals('world', $result['password']);
+        $this->assertSame('hello', $result['username']);
+        $this->assertSame('world', $result['password']);
     }
 
     public function testDecodeOnlyUsername()
@@ -25,8 +25,8 @@ class BasicAuthTest extends TestCase
 
         $result = $this->decode($userPassword);
 
-        $this->assertEquals('hello', $result['username']);
-        $this->assertEquals('', $result['password']);
+        $this->assertSame('hello', $result['username']);
+        $this->assertSame('', $result['password']);
     }
 
     public function testDecodeOnlyPassword()
@@ -35,8 +35,8 @@ class BasicAuthTest extends TestCase
 
         $result = $this->decode($userPassword);
 
-        $this->assertEquals('', $result['username']);
-        $this->assertEquals('world', $result['password']);
+        $this->assertSame('', $result['username']);
+        $this->assertSame('world', $result['password']);
     }
 
     public function testDecodeOnlyColon()
@@ -45,18 +45,18 @@ class BasicAuthTest extends TestCase
 
         $result = $this->decode($userPassword);
 
-        $this->assertEquals('', $result['username']);
-        $this->assertEquals('', $result['password']);
+        $this->assertSame('', $result['username']);
+        $this->assertSame('', $result['password']);
     }
 
     public function testDecodeEmpty()
     {
-        $this->assertEquals(0, count($this->decode('')));
+        $this->assertSame(0, count($this->decode('')));
     }
 
     public function testDecodeNoColon()
     {
-        $this->assertEquals(0, count($this->decode('123Abc')));
+        $this->assertSame(0, count($this->decode('123Abc')));
     }
 
     public function testEncode()
@@ -68,7 +68,7 @@ class BasicAuthTest extends TestCase
     {
         $result = $this->decode($this->encode('rob', 'waller'));
 
-        $this->assertEquals('rob', $result['username']);
-        $this->assertEquals('waller', $result['password']);
+        $this->assertSame('rob', $result['username']);
+        $this->assertSame('waller', $result['password']);
     }
 }

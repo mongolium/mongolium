@@ -36,7 +36,7 @@ class TokenTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertSame(201, $response->getStatusCode());
 
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
@@ -48,12 +48,12 @@ class TokenTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
 
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->errors));
-        $this->assertEquals(
+        $this->assertSame(
             'Bad Request: Please supply a username and password with your request',
             $json->errors->message
         );
@@ -65,12 +65,12 @@ class TokenTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
 
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->errors));
-        $this->assertEquals(
+        $this->assertSame(
             'Bad Request: Please supply a valid username and password with your request',
             $json->errors->message
         );
@@ -84,43 +84,43 @@ class TokenTest extends FeatureCase
 
         $response = $this->request('PATCH', '/api/token', ['headers' => ['Authorization' => 'Bearer ' . $jwt]]);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
 
         $json = json_decode($response->getBody());
 
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
-        $this->assertEquals('token', $json->type);
+        $this->assertSame('token', $json->type);
     }
 
     public function testUpdateTokenNoToken()
     {
         $response = $this->request('PATCH', '/api/token');
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
 
         $json = json_decode($response->getBody());
 
         $this->assertTrue(isset($json->errors));
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
-        $this->assertEquals('400', $json->errors->code);
-        $this->assertEquals('Bad Request: Please provide an authentication token', $json->errors->message);
+        $this->assertSame(400, $json->errors->code);
+        $this->assertSame('Bad Request: Please provide an authentication token', $json->errors->message);
     }
 
     public function testUpdateTokenBadToken()
     {
         $response = $this->request('PATCH', '/api/token', ['headers' => ['Authorization' => 'Bearer 123']]);
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
 
         $json = json_decode($response->getBody());
 
         $this->assertTrue(isset($json->errors));
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
-        $this->assertEquals('401', $json->errors->code);
-        $this->assertEquals('Unauthorized: Please provide a valid authentication token', $json->errors->message);
+        $this->assertSame(401, $json->errors->code);
+        $this->assertSame('Unauthorized: Please provide a valid authentication token', $json->errors->message);
     }
 
     public function tearDown()

@@ -37,8 +37,8 @@ class TokenTest extends TestCase
 
         $payload = $token->getPayload($jwt);
 
-        $this->assertEquals($payload->user_id, '8343bsc');
-        $this->assertEquals($payload->user_type, 'editor');
+        $this->assertSame($payload->user_id, '8343bsc');
+        $this->assertSame($payload->user_type, 'editor');
     }
 
     public function testRenewToken()

@@ -37,7 +37,7 @@ class BaseOrmTest extends TestCase
 
         $this->assertInstanceOf(ObjectId::class, $result['_id']);
         $this->assertFalse(isset($result['id']));
-        $this->assertEquals('john', $data['name']);
+        $this->assertSame('john', $data['name']);
     }
 
     public function testMakeObjectIdNoId()
@@ -48,7 +48,7 @@ class BaseOrmTest extends TestCase
 
         $result = $baseOrm->makeObjectId($data);
 
-        $this->assertEquals('rob', $data['name']);
+        $this->assertSame('rob', $data['name']);
         $this->assertFalse(isset($result['id']));
         $this->assertFalse(isset($result['_id']));
     }
@@ -61,7 +61,7 @@ class BaseOrmTest extends TestCase
 
         $result = $baseOrm->emptyEntityId($data);
 
-        $this->assertEquals('', $result['id']);
+        $this->assertSame('', $result['id']);
     }
 
     public function testEmptyEntityIdNoId()
@@ -72,8 +72,8 @@ class BaseOrmTest extends TestCase
 
         $result = $baseOrm->emptyEntityId($data);
 
-        $this->assertEquals('', $result['id']);
-        $this->assertEquals('chris', $result['name']);
+        $this->assertSame('', $result['id']);
+        $this->assertSame('chris', $result['name']);
     }
 
     public function testHasId()
@@ -103,15 +103,15 @@ class BaseOrmTest extends TestCase
 
         $keys = $baseOrm->getEntityProperties(AdminModel::class);
 
-        $this->assertEquals($keys[0], 'id');
-        $this->assertEquals($keys[1], 'username');
-        $this->assertEquals($keys[2], 'password');
-        $this->assertEquals($keys[3], 'email');
-        $this->assertEquals($keys[4], 'firstName');
-        $this->assertEquals($keys[5], 'lastName');
-        $this->assertEquals($keys[6], 'type');
-        $this->assertEquals($keys[7], 'createdAt');
-        $this->assertEquals($keys[8], 'updatedAt');
+        $this->assertSame($keys[0], 'id');
+        $this->assertSame($keys[1], 'username');
+        $this->assertSame($keys[2], 'password');
+        $this->assertSame($keys[3], 'email');
+        $this->assertSame($keys[4], 'firstName');
+        $this->assertSame($keys[5], 'lastName');
+        $this->assertSame($keys[6], 'type');
+        $this->assertSame($keys[7], 'createdAt');
+        $this->assertSame($keys[8], 'updatedAt');
     }
 
     /**
@@ -225,7 +225,7 @@ class BaseOrmTest extends TestCase
             'name'
         ]);
 
-        $this->assertEquals('myFirstName', $string);
+        $this->assertSame('myFirstName', $string);
     }
 
     public function testKeyPartsToKeyOddData()
@@ -238,7 +238,7 @@ class BaseOrmTest extends TestCase
             'Name'
         ]);
 
-        $this->assertEquals('myFirstName', $string);
+        $this->assertSame('myFirstName', $string);
     }
 
     public function testKeyPartsToKeyOddDataTwo()
@@ -252,7 +252,7 @@ class BaseOrmTest extends TestCase
             'Name'
         ]);
 
-        $this->assertEquals('myFirstName', $string);
+        $this->assertSame('myFirstName', $string);
     }
 
     public function testMakeEntityArray()
@@ -267,10 +267,10 @@ class BaseOrmTest extends TestCase
 
         $result = $baseOrm->makeEntityArray($data);
 
-        $this->assertEquals('car', $result[0]);
-        $this->assertEquals('park', $result[1]);
-        $this->assertEquals('foo', $result[2][0]);
-        $this->assertEquals('bar', $result[2][1]);
+        $this->assertSame('car', $result[0]);
+        $this->assertSame('park', $result[1]);
+        $this->assertSame('foo', $result[2][0]);
+        $this->assertSame('bar', $result[2][1]);
     }
 
     public function testMakeEntityArrayWithBSON()
@@ -288,10 +288,10 @@ class BaseOrmTest extends TestCase
 
         $result = $baseOrm->makeEntityArray($data);
 
-        $this->assertEquals('car', $result[0]);
-        $this->assertEquals('park', $result[1]);
-        $this->assertEquals('foo', $result[2][0]);
-        $this->assertEquals('bar', $result[2][1]);
+        $this->assertSame('car', $result[0]);
+        $this->assertSame('park', $result[1]);
+        $this->assertSame('foo', $result[2][0]);
+        $this->assertSame('bar', $result[2][1]);
     }
 
     public function testMakeEntityId()
@@ -311,9 +311,9 @@ class BaseOrmTest extends TestCase
 
         $array = $baseOrm->makeEntityId($document);
 
-        $this->assertEquals('5ac18d1100000132000abc00', $array['id']);
-        $this->assertEquals('Rob', $array['name']);
-        $this->assertEquals(20, $array['age']);
+        $this->assertSame('5ac18d1100000132000abc00', $array['id']);
+        $this->assertSame('Rob', $array['name']);
+        $this->assertSame(20, $array['age']);
     }
 
     public function testMakeEntityNoId()
@@ -330,8 +330,8 @@ class BaseOrmTest extends TestCase
 
         $array = $baseOrm->makeEntityId($document);
 
-        $this->assertEquals('Rob', $array['name']);
-        $this->assertEquals(20, $array['age']);
+        $this->assertSame('Rob', $array['name']);
+        $this->assertSame(20, $array['age']);
     }
 }
 

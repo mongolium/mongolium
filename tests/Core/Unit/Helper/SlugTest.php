@@ -11,12 +11,12 @@ class SlugTest extends TestCase
 
     public function testMakeSlug()
     {
-        $this->assertEquals('this-is-a-title', $this->makeSlug('This Is a Title'));
+        $this->assertSame('this-is-a-title', $this->makeSlug('This Is a Title'));
     }
 
     public function testMakeSlugSpecialChracters()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'this-is-a-title-something-else-and-something-else',
             $this->makeSlug('This $ Is # a Title & Something ! * Else £ And $ Some"thi\'ng ^ Else')
         );
@@ -24,7 +24,7 @@ class SlugTest extends TestCase
 
     public function testDashTitle()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'this-is-a-title',
             $this->makeSlug('this--is----a---title')
         );
@@ -32,7 +32,7 @@ class SlugTest extends TestCase
 
     public function testTitleWithNumbers()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'this-is-title-number-04',
             $this->makeSlug('this--is-----  title number 04')
         );
@@ -40,7 +40,7 @@ class SlugTest extends TestCase
 
     public function testOkTitle()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'this-is-a-title',
             $this->makeSlug('this-is-a-title')
         );

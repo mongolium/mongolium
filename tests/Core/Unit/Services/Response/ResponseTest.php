@@ -29,7 +29,7 @@ class ResponseTest extends TestCase
             $response
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertStringStartsWith('application/json', $response->getHeaderLine('Content-type'));
     }
 
@@ -46,7 +46,7 @@ class ResponseTest extends TestCase
             $response
         );
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertSame(201, $response->getStatusCode());
     }
 
     public function test400()
@@ -62,7 +62,7 @@ class ResponseTest extends TestCase
             $response
         );
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
         $this->assertStringStartsWith('application/json', $response->getHeaderLine('Content-type'));
     }
 
@@ -79,7 +79,7 @@ class ResponseTest extends TestCase
             $response
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function test404()
@@ -95,6 +95,6 @@ class ResponseTest extends TestCase
             $response
         );
 
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertSame(404, $response->getStatusCode());
     }
 }
