@@ -13,7 +13,7 @@ class EnvironmentTest extends TestCase
     {
         putenv('FOO=bar');
 
-        $this->assertEquals('bar', $this->env('FOO'));
+        $this->assertSame('bar', $this->env('FOO'));
     }
 
     /**

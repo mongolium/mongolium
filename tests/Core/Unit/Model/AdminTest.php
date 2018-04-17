@@ -44,7 +44,7 @@ class AdminTest extends TestCase
 
         $data = $admin->extract();
 
-        $this->assertEquals(9, count($data));
+        $this->assertSame(9, count($data));
         $this->assertTrue(isset($data['id']));
         $this->assertTrue(isset($data['username']));
         $this->assertTrue(isset($data['password']));
@@ -58,11 +58,11 @@ class AdminTest extends TestCase
 
     public function testGetTable()
     {
-        $this->assertEquals('admins', Admin::getTable());
+        $this->assertSame('admins', Admin::getTable());
     }
 
     public function testGetUnique()
     {
-        $this->assertEquals('username', Admin::getUnique()[0]);
+        $this->assertSame('username', Admin::getUnique()[0]);
     }
 }

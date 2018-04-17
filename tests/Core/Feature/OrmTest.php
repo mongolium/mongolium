@@ -35,9 +35,9 @@ class OrmTest extends FeatureCase
 
         $data = $result->extract();
 
-        $this->assertEquals($admin['username'], $data['username']);
-        $this->assertEquals($admin['password'], $data['password']);
-        $this->assertEquals($admin['type'], $data['type']);
+        $this->assertSame($admin['username'], $data['username']);
+        $this->assertSame($admin['password'], $data['password']);
+        $this->assertSame($admin['type'], $data['type']);
         $this->assertTrue(isset($data['id']));
     }
 
@@ -55,9 +55,9 @@ class OrmTest extends FeatureCase
 
         $data = $result->extract();
 
-        $this->assertEquals($admin['username'], $data['username']);
-        $this->assertEquals($admin['password'], $data['password']);
-        $this->assertEquals($admin['type'], $data['type']);
+        $this->assertSame($admin['username'], $data['username']);
+        $this->assertSame($admin['password'], $data['password']);
+        $this->assertSame($admin['type'], $data['type']);
         $this->assertTrue(isset($data['id']));
     }
 
@@ -69,7 +69,7 @@ class OrmTest extends FeatureCase
 
         $orm->create(Admin::class, $admin);
 
-        $this->assertEquals(1, $orm->count(Admin::class, ['username' => $admin['username']]));
+        $this->assertSame(1, $orm->count(Admin::class, ['username' => $admin['username']]));
     }
 
     public function testCountMultiple()
@@ -85,14 +85,14 @@ class OrmTest extends FeatureCase
         $orm->create(Admin::class, $admin1);
         $orm->create(Admin::class, $admin2);
 
-        $this->assertEquals(2, $orm->count(Admin::class, ['type' => 'admin']));
+        $this->assertSame(2, $orm->count(Admin::class, ['type' => 'admin']));
     }
 
     public function testCountZero()
     {
         $orm = new Orm(Client::getInstance(getenv('MONGO_HOST'), getenv('MONGO_PORT'), getenv('MONGO_DATABASE'), getenv('MONGO_USERNAME'), getenv('MONGO_PASSWORD')));
 
-        $this->assertEquals(0, $orm->count(Admin::class, ['username' => 'rob']));
+        $this->assertSame(0, $orm->count(Admin::class, ['username' => 'rob']));
     }
 
     public function testUpdate()
@@ -113,7 +113,7 @@ class OrmTest extends FeatureCase
 
         $updateData = $update->extract();
 
-        $this->assertEquals('user', $updateData['type']);
+        $this->assertSame('user', $updateData['type']);
     }
 
     /**
@@ -159,13 +159,13 @@ class OrmTest extends FeatureCase
 
         $this->assertInstanceOf(Collection::class, $update);
 
-        $this->assertEquals(2, $update->count());
+        $this->assertSame(2, $update->count());
 
         $first = $update->first();
 
         $this->assertInstanceOf(Admin::class, $first);
 
-        $this->assertEquals('editor', $first->extract()['type']);
+        $this->assertSame('editor', $first->extract()['type']);
     }
 
     /**
@@ -198,7 +198,7 @@ class OrmTest extends FeatureCase
 
         $this->assertInstanceOf(Collection::class, $collection);
 
-        $this->assertEquals(2, $collection->count());
+        $this->assertSame(2, $collection->count());
 
         $this->assertInstanceOf(Admin::class, $collection->first());
     }
@@ -222,7 +222,7 @@ class OrmTest extends FeatureCase
 
         $collection = $orm->all(Admin::class, ['type' => 'editor']);
 
-        $this->assertEquals(2, $collection->count());
+        $this->assertSame(2, $collection->count());
 
         $this->assertInstanceOf(Admin::class, $collection->first());
     }
@@ -239,7 +239,7 @@ class OrmTest extends FeatureCase
 
         $this->assertInstanceOf(Collection::class, $collection);
 
-        $this->assertEquals(2, $collection->count());
+        $this->assertSame(2, $collection->count());
 
         $this->assertInstanceOf(Post::class, $collection->first());
     }
@@ -261,7 +261,7 @@ class OrmTest extends FeatureCase
 
         $all = $orm->all(Admin::class);
 
-        $this->assertEquals(2, $all->count());
+        $this->assertSame(2, $all->count());
     }
 
     public function tearDown()

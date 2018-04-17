@@ -19,7 +19,7 @@ class AuthTest extends TestCase
 
         $result = $this->getAuthorizationAttribute($request, 'Bearer');
 
-        $this->assertEquals('123', $result);
+        $this->assertSame('123', $result);
     }
 
     public function testGetAuthorizationAttributeNoBearer()
@@ -30,7 +30,7 @@ class AuthTest extends TestCase
 
         $result = $this->getAuthorizationAttribute($request, 'Bearer');
 
-        $this->assertEquals('', $result);
+        $this->assertSame('', $result);
     }
 
     public function testGetAuthorizationAttributeBadData()
@@ -41,7 +41,7 @@ class AuthTest extends TestCase
 
         $result = $this->getAuthorizationAttribute($request, 'Bearer');
 
-        $this->assertEquals('', $result);
+        $this->assertSame('', $result);
     }
 
     public function testGetAuthorizationAttributeBadAtrribute()
@@ -52,7 +52,7 @@ class AuthTest extends TestCase
 
         $result = $this->getAuthorizationAttribute($request, 'Bearer ');
 
-        $this->assertEquals('123', $result);
+        $this->assertSame('123', $result);
     }
 
     public function testGetAuthorizationAttributeWithCommas()
@@ -63,7 +63,7 @@ class AuthTest extends TestCase
 
         $result = $this->getAuthorizationAttribute($request, 'Bearer ');
 
-        $this->assertEquals('123', $result);
+        $this->assertSame('123', $result);
     }
 
     public function testGetAuthorizationAttributeNoHeader()
@@ -73,7 +73,7 @@ class AuthTest extends TestCase
 
         $result = $this->getAuthorizationAttribute($request, 'Bearer');
 
-        $this->assertEquals('', $result);
+        $this->assertSame('', $result);
     }
 
     public function testGetBearerToken()
@@ -84,7 +84,7 @@ class AuthTest extends TestCase
 
         $result = $this->getBearerToken($request);
 
-        $this->assertEquals('123', $result);
+        $this->assertSame('123', $result);
     }
 
     public function testGetBearerTokenBadHeader()
@@ -95,7 +95,7 @@ class AuthTest extends TestCase
 
         $result = $this->getBearerToken($request);
 
-        $this->assertEquals('', $result);
+        $this->assertSame('', $result);
     }
 
     public function testGetBasicAuth()
@@ -106,7 +106,7 @@ class AuthTest extends TestCase
 
         $result = $this->getBasicAuth($request);
 
-        $this->assertEquals('abc', $result);
+        $this->assertSame('abc', $result);
     }
 
     public function testGetBasicAuthBadHeader()
@@ -117,6 +117,6 @@ class AuthTest extends TestCase
 
         $result = $this->getBasicAuth($request);
 
-        $this->assertEquals('', $result);
+        $this->assertSame('', $result);
     }
 }

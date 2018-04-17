@@ -46,7 +46,7 @@ class PageTest extends TestCase
 
         $data = $page->extract();
 
-        $this->assertEquals(10, count($data));
+        $this->assertSame(10, count($data));
         $this->assertTrue(isset($data['id']));
         $this->assertTrue(isset($data['title']));
         $this->assertTrue(isset($data['slug']));

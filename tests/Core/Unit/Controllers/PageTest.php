@@ -42,7 +42,7 @@ class PageTest extends TestCase
 
         $this->assertInstanceOf(SlimResponse::class, $response);
 
-        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         $this->assertStringStartsWith('application/json', $result->getHeaderLine('Content-type'));
 
         $data = $result->__toString();
@@ -75,7 +75,7 @@ class PageTest extends TestCase
 
         $this->assertInstanceOf(SlimResponse::class, $result);
 
-        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         $this->assertStringStartsWith('application/json', $result->getHeaderLine('Content-type'));
 
         $data = $result->__toString();

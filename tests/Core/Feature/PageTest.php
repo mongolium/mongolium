@@ -27,10 +27,10 @@ class PageTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
-        $this->assertEquals(4, count($json->data));
+        $this->assertSame(4, count($json->data));
     }
 
     public function testGetPagesPublished()
@@ -45,8 +45,8 @@ class PageTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(2, count($json->data));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(2, count($json->data));
     }
 
     public function testGetPage()
@@ -61,11 +61,11 @@ class PageTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->data));
-        $this->assertEquals($data['title'], $json->data->title);
+        $this->assertSame($data['title'], $json->data->title);
     }
 
     public function testCreatePage()
@@ -91,12 +91,12 @@ class PageTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertSame(201, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->data));
-        $this->assertEquals('This is a page', $json->data->title);
-        $this->assertEquals('this-is-a-page', $json->data->slug);
+        $this->assertSame('This is a page', $json->data->title);
+        $this->assertSame('this-is-a-page', $json->data->slug);
     }
 
     public function testUpdatePage()
@@ -129,12 +129,12 @@ class PageTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertTrue(isset($json->id));
         $this->assertTrue(isset($json->links));
         $this->assertTrue(isset($json->data));
-        $this->assertEquals('This is an updated page', $json->data->title);
-        $this->assertEquals('this-is-an-updated-page', $json->data->slug);
+        $this->assertSame('This is an updated page', $json->data->title);
+        $this->assertSame('this-is-an-updated-page', $json->data->slug);
     }
 
     public function testPageDelete()
@@ -162,8 +162,8 @@ class PageTest extends FeatureCase
 
         $json = json_decode($response->getBody());
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Page deleted.', $json->data->message);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('Page deleted.', $json->data->message);
 
         $collection = $orm->all(Page::class);
 

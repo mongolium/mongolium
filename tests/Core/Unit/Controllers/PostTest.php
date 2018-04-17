@@ -41,7 +41,7 @@ class PostTest extends TestCase
 
         $this->assertInstanceOf(SlimResponse::class, $response);
 
-        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         $this->assertStringStartsWith('application/json', $result->getHeaderLine('Content-type'));
 
         $data = $result->__toString();
