@@ -5,9 +5,12 @@ namespace Mongolium\Core\Services\Db;
 use Mongolium\Core\Services\Db\Client;
 use Mongolium\Core\Services\Db\Hydratpr;
 use Mongolium\Core\Exceptions\OrmException;
+use Mongolium\Core\Exceptions\ClientException;
 use Mongolium\Core\Services\Db\BaseModel;
 use Mongolium\Core\Services\Db\BaseOrm;
 use ReallySimple\Collection;
+use MongoDB\Driver\Exception\AuthenticationException;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use Error;
 
 /**
@@ -81,7 +84,13 @@ class Orm extends BaseOrm
      */
     public function count(string $entity, array $query): int
     {
-        return $this->client->getCollection($entity::getTable())->count($query);
+        try {
+            return $this->client->getCollection($entity::getTable())->count($query);
+        } catch (AuthenticationException $e) {
+            throw new ClientException('Could not connect to database: ' . $e->getMessage());
+        } catch (ConnectionTimeoutException $e) {
+            throw new ClientException('Could not connect to database: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -218,8 +227,14 @@ class Orm extends BaseOrm
      */
     public function drop(string $entity): bool
     {
-        $result = $this->client->getCollection($entity::getTable())->drop();
+        try {
+            $result = $this->client->getCollection($entity::getTable())->drop();
 
-        return is_array($result) && isset($result['ok']) && $result['ok'] === 1;
+            return is_array($result) && isset($result['ok']) && $result['ok'] === 1;
+        } catch (AuthenticationException $e) {
+            throw new ClientException('Could not connect to database: ' . $e->getMessage());
+        } catch (ConnectionTimeoutException $e) {
+            throw new ClientException('Could not connect to database: ' . $e->getMessage());
+        }
     }
 }

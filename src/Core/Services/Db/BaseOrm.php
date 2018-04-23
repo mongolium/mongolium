@@ -4,10 +4,13 @@ namespace Mongolium\Core\Services\Db;
 
 use Mongolium\Core\Services\Db\Client;
 use Mongolium\Core\Exceptions\OrmException;
+use Mongolium\Core\Exceptions\ClientException;
 use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONArray;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Driver\Exception\AuthenticationException;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use ReflectionClass;
 use Error;
 
@@ -74,7 +77,7 @@ class BaseOrm
             $data['id'] = $data['_id']->__toString();
             unset($data['_id']);
         }
-        
+
         return $data;
     }
 
@@ -214,7 +217,13 @@ class BaseOrm
      */
     public function findAsArray(string $entity, array $query = []): array
     {
-        return $this->client->getCollection($entity::getTable())->find($this->makeObjectId($query))->toArray();
+        try {
+            return $this->client->getCollection($entity::getTable())->find($this->makeObjectId($query))->toArray();
+        } catch (AuthenticationException $e) {
+            throw new ClientException('Could not connect to database: ' . $e->getMessage());
+        } catch (ConnectionTimeoutException $e) {
+            throw new ClientException('Could not connect to database: ' . $e->getMessage());
+        }
     }
 
     /**
