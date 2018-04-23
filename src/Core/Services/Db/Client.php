@@ -55,7 +55,7 @@ final class Client
     private function makeConnection(string $host, string $port, string $database, string $username, string $password)
     {
         if (!empty($username) && !empty($password)) {
-            return new MongoClient('mongodb://' . $host . ':' . $port, ['username' => $username, 'password' => $password]);
+            return new MongoClient('mongodb://' . $host . ':' . $port, ['user' => $username, 'pwd' => $password]);
         }
 
         return new MongoClient('mongodb://' . $host . ':' . $port);
