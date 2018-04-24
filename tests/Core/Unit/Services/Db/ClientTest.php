@@ -4,7 +4,6 @@ namespace Tests\Core\Unit\Services\Db;
 
 use PHPUnit\Framework\TestCase;
 use Mongolium\Core\Services\Db\Client;
-use Mongolium\Exceptions\ClientException;
 
 class ClientTest extends TestCase
 {
@@ -28,12 +27,5 @@ class ClientTest extends TestCase
          $client = Client::getInstance('127.0.0.1', 27017, 'unknowndb', 'hello', 'world');
 
          $this->assertInstanceOf('MongoDB\Collection', $client->getCollection('cars'));
-     }
-
-     public function testFindFail()
-     {
-         $client = Client::getInstance('127.0.0.1', 27017, 'unknowndb', 'hello', 'world');
-
-         $client->getCollection('cars')->find(['car' => 'park']);
      }
 }

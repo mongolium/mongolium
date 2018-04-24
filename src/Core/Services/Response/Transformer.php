@@ -21,15 +21,24 @@ class Transformer
             'links' => $this->json->getLinks()
         ];
 
+        return array_merge($data, $this->makeData());
+    }
+
+    private function makeData(): array
+    {
         if (!$this->json->isSuccess()) {
-            $data['errors'] = [
-                'code' => $this->json->getCode(),
-                'message' => $this->json->getMessage()
+            return [
+                'errors' => [
+                    'code' => $this->json->getCode(),
+                    'message' => $this->json->getMessage()
+                ]
             ];
-        } elseif (!empty($this->json->getData())) {
-            $data['data'] = $this->json->getData();
         }
 
-        return $data;
+        if (!empty($this->json->getData())) {
+            return ['data' => $this->json->getData()];
+        }
+
+        return ['data' => []];
     }
 }

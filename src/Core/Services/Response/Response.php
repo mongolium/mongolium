@@ -96,6 +96,22 @@ class Response
         return $instance->respond($response, $transformer, 404);
     }
 
+    public static function respond500(SlimResponse $response, string $message, array $links): SlimResponse
+    {
+        $instance = static::getInstance();
+
+        $transformer = $instance->makeTransformer(
+            500,
+            'Internal Server Error: ' . $message,
+            $instance->uniqueId(),
+            'error',
+            [],
+            $links
+        );
+
+        return $instance->respond($response, $transformer, 500);
+    }
+
     public function makeJson(int $code, string $message, string $id, string $type, array $data, array $links): Json
     {
         return new Json($code, $message, $id, $type, $data, $links);
