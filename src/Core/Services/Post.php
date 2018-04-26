@@ -38,7 +38,7 @@ class Post
         return $this->orm->find(PostModel::class, ['id' => $id]);
     }
 
-    public function create(array $data): PostModel
+    public function create($data): PostModel
     {
         $data['created_at'] = Carbon::now()->toDateTimeString();
         $data['updated_at'] = Carbon::now()->toDateTimeString();
@@ -47,7 +47,7 @@ class Post
         return $this->orm->create(PostModel::class, $data);
     }
 
-    public function update(array $data): PostModel
+    public function update($data): PostModel
     {
         $data['updated_at'] = Carbon::now()->toDateTimeString();
         $data['slug'] = $this->makeSlug($data['title']);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mongolium\Core\Services\Db;
 
 use MongoDB\Client as MongoClient;
@@ -31,12 +33,12 @@ final class Client
      * Constructor set to private as class follows singleton pattern.
      *
      * @param string $host
-     * @param string $port
+     * @param int $port
      * @param string $database
      * @param string $username
      * @param string $password
      */
-    private function __construct(string $host, string $port, string $database, string $username, string $password)
+    private function __construct(string $host, int $port, string $database, string $username, string $password)
     {
         $this->connection = $this->makeConnection($host, $port, $database, $username, $password);
 
@@ -47,12 +49,12 @@ final class Client
      * Make the Mongo Client connection based on whether you need authentication or not.
      *
      * @param string $host
-     * @param string $port
+     * @param int $port
      * @param string $database
      * @param string $username
      * @param string $password
      */
-    private function makeConnection(string $host, string $port, string $database, string $username, string $password)
+    private function makeConnection(string $host, int $port, string $database, string $username, string $password)
     {
         if (!empty($username) && !empty($password)) {
             return new MongoClient('mongodb://' . $host . ':' . $port, ['user' => $username, 'pwd' => $password]);
@@ -66,11 +68,13 @@ final class Client
      * pattern so only one client connection is ever created.
      *
      * @param string $host
-     * @param string $port
+     * @param int $port
      * @param string $database
+     * @param string $username
+     * @param string $password
      * @return Client
      */
-    public static function getInstance(string $host, string $port, string $database, string $username, string $password): Client
+    public static function getInstance(string $host, int $port, string $database, string $username, string $password): Client
     {
         if (null === static::$instance) {
             static::$instance = new static($host, $port, $database, $username, $password);
